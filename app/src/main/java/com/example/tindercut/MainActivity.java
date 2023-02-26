@@ -28,12 +28,18 @@ import com.android.volley.toolbox.Volley;
 import com.hbisoft.pickit.PickiT;
 import com.hbisoft.pickit.PickiTCallbacks;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
@@ -93,17 +99,49 @@ public class MainActivity extends AppCompatActivity implements PickiTCallbacks {
                     byte [] bytes = byteArrayOutputStream.toByteArray();
                     final String base64Image  = Base64.encodeToString(bytes, Base64.DEFAULT);
                     RequestQueue queue = Volley.newRequestQueue(getApplicationContext());
-                    String url ="http://77.91.78.24:8011/img";
-                    System.out.println("Here");
+                    String url ="http://79.137.206.63:8011/img";
 
                     SimpleMultiPartRequest uploadRequest = new SimpleMultiPartRequest(Request.Method.POST, url,
                             new Response.Listener<String>() {
                                 @Override
                                 public void onResponse(String response) {
-                                    if(response.equals("Ok")){
-                                        Toast.makeText(getApplicationContext(), "Успешно загружено!", Toast.LENGTH_SHORT).show();
+                                    try {
+                                        JSONObject responseJSON = new JSONObject(response);
+                                        JSONObject hairdresser = responseJSON.getJSONObject("hairdresser");
+                                        JSONArray hairImages = responseJSON.getJSONArray("images");
+
+                                        //Выполняем проверку успеха отправки изображения
+                                        String requestResult = responseJSON.getString("result");
+                                        String haircutStyle = responseJSON.getString("hairstyle");
+                                        if (requestResult.equals("Ok")){
+                                            Toast.makeText(getApplicationContext(), "Изображение успешно загружено.", Toast.LENGTH_SHORT).show();
+
+                                            //Получсаем изображения
+                                            for(int i = 0; i < hairImages.length(); i++){
+                                                JSONObject hairImage = hairImages.getJSONObject(i);
+                                                String hairImageName = hairImage.getString("name");
+                                                JSONArray hairImageBytes = hairImage.getJSONArray("binary");
+                                                byte[] byteArrayImage = new byte[hairImageBytes.length()];
+                                                for (int j = 0; j < hairImageBytes.length(); j++) {
+                                                    byteArrayImage[j]=(byte)(((int)hairImageBytes.get(j)) & 0xFF);
+                                                }
+                                                //byte[] byteArrayInput = hairImage.getJSONArray("binary");
+                                                System.out.println(hairImage.toString());
+                                                System.out.println(Arrays.toString(byteArrayImage));
+                                                ImageBitmap = BitmapFactory.decodeByteArray(byteArrayImage, 0, byteArrayImage.length);
+                                                //Toast.makeText(getApplicationContext(), hairImage.toString(), Toast.LENGTH_LONG).show();
+                                                ImageView.setImageBitmap(ImageBitmap);
+                                                Toast.makeText(getApplicationContext(), haircutStyle, Toast.LENGTH_SHORT).show();
+                                            }
+                                        }
+                                        else{
+                                            Toast.makeText(getApplicationContext(), requestResult, Toast.LENGTH_SHORT).show();
+                                        }
+
+                                    } catch (JSONException e) {
+                                        e.printStackTrace();
+
                                     }
-                                    else Toast.makeText(getApplicationContext(), "Ошибка загрузки!", Toast.LENGTH_SHORT).show();
                                 }
                             }, new Response.ErrorListener() {
                         @Override
@@ -122,7 +160,7 @@ public class MainActivity extends AppCompatActivity implements PickiTCallbacks {
                 // * ТУТ НУЖНО ЧТО-ТО СДЕЛАТЬ НА СЕРВЕРЕ *
 
                 //Отображаем картинку по URI
-                ImageView.setImageURI(imageUri);
+                ImageView.setImageBitmap(ImageBitmap);
 
         }
 
