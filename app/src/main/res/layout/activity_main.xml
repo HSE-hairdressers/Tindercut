@@ -9,13 +9,23 @@
     <Button
         android:id="@+id/button"
         android:layout_width="167dp"
-        android:layout_height="113dp"
-        android:layout_marginTop="487dp"
-        android:layout_marginBottom="2dp"
-        android:text="@string/buttontext"
+        android:layout_height="100dp"
+        android:layout_marginTop="408dp"
+        android:text="@string/button_upload_text"
+        app:layout_constraintBottom_toTopOf="@+id/button2"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/button2"
+        android:layout_width="167dp"
+        android:layout_height="100dp"
+        android:layout_marginTop="500dp"
+        android:layout_marginBottom="3dp"
+        android:text="@string/button_send_text"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
