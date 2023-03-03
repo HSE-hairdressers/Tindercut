@@ -43,6 +43,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.Serializable;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -136,32 +137,30 @@ public class MainActivity extends AppCompatActivity implements PickiTCallbacks {
                     public void onResponse(String response) {
                         try {
                             JSONObject responseJSON = new JSONObject(response);
-                            JSONObject hairdresser = responseJSON.getJSONObject("hairdresser");
-                            JSONArray hairImages = responseJSON.getJSONArray("images");
+                            JSONArray hairData = responseJSON.getJSONArray("data");
+
 
                             //Выполняем проверку успеха отправки изображения
                             String requestResult = responseJSON.getString("result");
-                            String haircutStyle = responseJSON.getString("hairstyle");
                             if (requestResult.equals("Ok")) {
                                 Toast.makeText(getApplicationContext(), "Изображение успешно загружено.", Toast.LENGTH_SHORT).show();
 
-                                //Получсаем изображения
-                                for (int i = 0; i < hairImages.length(); i++) {
-                                    JSONObject hairImage = hairImages.getJSONObject(i);
-                                    String hairImageName = hairImage.getString("name");
-                                    JSONArray hairImageBytes = hairImage.getJSONArray("binary");
-                                    byte[] byteArrayImage = new byte[hairImageBytes.length()];
-                                    for (int j = 0; j < hairImageBytes.length(); j++) {
-                                        byteArrayImage[j] = (byte) (((int) hairImageBytes.get(j)) & 0xFF);
-                                    }
-                                    //byte[] byteArrayInput = hairImage.getJSONArray("binary");
-                                    System.out.println(hairImage.toString());
-                                    System.out.println(Arrays.toString(byteArrayImage));
-                                    ImageBitmap = BitmapFactory.decodeByteArray(byteArrayImage, 0, byteArrayImage.length);
-                                    //Toast.makeText(getApplicationContext(), hairImage.toString(), Toast.LENGTH_LONG).show();
-                                    ImageView.setImageBitmap(ImageBitmap);
-                                    Toast.makeText(getApplicationContext(), haircutStyle, Toast.LENGTH_SHORT).show();
+                                Intent scrollingIntent = new Intent(MainActivity.this, ScrollingActivity.class);
+                                ArrayList<DataSerializable> arrayToSend = new ArrayList<>();
+                                for(int i = 0; i < hairData.length(); i++){
+                                    arrayToSend.add(new DataSerializable(hairData.get(i).toString()));
                                 }
+
+
+                                Bundle bundle = new Bundle();
+                                bundle.putSerializable("dataArray", arrayToSend);
+                                scrollingIntent.putExtras(bundle);
+                                try {
+                                    startActivity(scrollingIntent);
+                                } catch (Exception e){
+                                    e.getStackTrace();
+                                }
+
                             } else {
                                 Toast.makeText(getApplicationContext(), requestResult, Toast.LENGTH_SHORT).show();
                             }
