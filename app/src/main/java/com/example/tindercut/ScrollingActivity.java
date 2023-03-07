@@ -17,6 +17,8 @@ import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.widget.NestedScrollView;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.provider.ContactsContract;
 import android.util.Log;
@@ -62,9 +64,8 @@ public class ScrollingActivity extends AppCompatActivity {
         System.out.println("Here");
         Bundle bundle = getIntent().getExtras();
         ArrayList<DataSerializable> dataArrayList = (ArrayList<DataSerializable>) bundle.getSerializable("dataArray");
+        ArrayList<String> imageUrls = new ArrayList<String>();
 
-        //Получаем scrollView страницы
-        LinearLayout linearLayout = (LinearLayout)findViewById(R.id.linearlayout);
         //Заполняем из данных
         for(int i = 0; i < dataArrayList.size(); i++){
             try {
@@ -76,43 +77,22 @@ public class ScrollingActivity extends AppCompatActivity {
                     JSONObject hairImage = hairImages.getJSONObject(j);
                     String hairImageName = hairImage.getString("name");
                     String imageUrl = hairImage.getString("img_path");
-                    ImageView imageView = new ImageView(getApplicationContext());
-                    new DownloadImageTask(imageView).execute(imageUrl);
-                    linearLayout.addView(imageView);
+                    imageUrls.add(imageUrl);
                 }
 
             } catch (JSONException e) {
                 e.printStackTrace();
             }
 
-
         }
 
-    }
+        //Получаем scrollView страницы
+        RecyclerView recyclerView = (RecyclerView)findViewById(R.id.recyclerview);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getApplicationContext());
+        DataAdapter adapter = new DataAdapter(getApplicationContext(), imageUrls);
+        recyclerView.setLayoutManager(linearLayoutManager);
+        recyclerView.setAdapter(adapter);
 
-    private class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
-        ImageView bmImage;
-
-        public DownloadImageTask(ImageView bmImage) {
-            this.bmImage = bmImage;
-        }
-
-        protected Bitmap doInBackground(String... urls) {
-            String urldisplay = urls[0];
-            Bitmap mIcon11 = null;
-            try {
-                InputStream in = new java.net.URL(urldisplay).openStream();
-                mIcon11 = BitmapFactory.decodeStream(in);
-            } catch (Exception e) {
-                Log.e("Error", e.getMessage());
-                e.printStackTrace();
-            }
-            return mIcon11;
-        }
-
-        protected void onPostExecute(Bitmap result) {
-            bmImage.setImageBitmap(result);
-        }
     }
 
 }

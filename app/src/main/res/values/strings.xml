@@ -1,7 +1,7 @@
 <resources>
-    <string name="app_name">TinderCut</string>
+    <string name="app_name">TCut</string>
     <string name="button_upload_text">ЗАГРУЗИТЬ</string>
     <string name="button_send_text">ОТПРАВИТЬ</string>
-    <string name="title_activity_scrolling">ScrollingActivity</string>
+    <string name="title_activity_scrolling">Поиск по фото</string>
     <string name="action_settings">Settings</string>
 </resources>
