@@ -60,10 +60,10 @@ public class ScrollingActivity extends AppCompatActivity {
         binding = ActivityScrollingBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        Toolbar toolbar = binding.toolbar;
+        /*Toolbar toolbar = binding.toolbar;
         setSupportActionBar(toolbar);
         CollapsingToolbarLayout toolBarLayout = binding.toolbarLayout;
-        toolBarLayout.setTitle(getTitle());
+        toolBarLayout.setTitle(getTitle());*/
         //Получаем данные
         System.out.println("Here");
         Bundle bundle = getIntent().getExtras();
@@ -104,8 +104,9 @@ public class ScrollingActivity extends AppCompatActivity {
 
         //Получаем scrollView страницы
         RecyclerView recyclerView = (RecyclerView)findViewById(R.id.recyclerview);
-        DataAdapter adapter = new DataAdapter(getApplicationContext(), imageUrls);
+        DataAdapter adapter = new DataAdapter(getApplicationContext(), temp);
         recyclerView.setAdapter(adapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
 
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
 
@@ -149,7 +150,7 @@ public class ScrollingActivity extends AppCompatActivity {
                         }
 
                         while (currentSize - 1 < nextLimit) {
-                            temp.add(imageUrls.get(currentSize));
+                            temp.add(imageUrls.get(currentSize - 1));
                             currentSize++;
                         }
 

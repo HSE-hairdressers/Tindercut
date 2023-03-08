@@ -35,14 +35,17 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ViewHolder> {
     @NonNull
     @Override
     public DataAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = inflater.inflate(R.layout.content_scrolling, parent, false);
+        View view = inflater.inflate(R.layout.image_item, parent, false);
         return new ViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull DataAdapter.ViewHolder holder, int position) {
         String url = Images.get(position);
-        new DownloadImageTask(holder.imageView).execute(url);
+        if (url != null){
+            System.out.println(holder.imageView.toString());
+            new DownloadImageTask(holder.imageView).execute(url);
+        }
 
     }
 
@@ -58,10 +61,10 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ViewHolder> {
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder{
-        final ImageView imageView;
-        ViewHolder(View view){
+        ImageView imageView;
+        public ViewHolder(View view){
             super(view);
-            imageView = new ImageView(view.getContext());
+            imageView = (ImageView)view.findViewById(R.id.image_item);
         }
     }
 
