@@ -60,10 +60,11 @@ public class ScrollingActivity extends AppCompatActivity {
         binding = ActivityScrollingBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        /*Toolbar toolbar = binding.toolbar;
+        Toolbar toolbar = binding.toolbar;
         setSupportActionBar(toolbar);
         CollapsingToolbarLayout toolBarLayout = binding.toolbarLayout;
-        toolBarLayout.setTitle(getTitle());*/
+        toolBarLayout.setTitle(getTitle());
+
         //Получаем данные
         System.out.println("Here");
         Bundle bundle = getIntent().getExtras();

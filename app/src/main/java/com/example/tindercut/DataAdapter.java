@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -16,9 +17,8 @@ import com.android.volley.misc.AsyncTask;
 
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.ResourceBundle;
 
-public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ViewHolder> {
+public class DataAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private final int VIEW_TYPE_ITEM = 0;
     private final int VIEW_TYPE_LOADING = 1;
@@ -34,17 +34,26 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ViewHolder> {
 
     @NonNull
     @Override
-    public DataAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = inflater.inflate(R.layout.image_item, parent, false);
-        return new ViewHolder(view);
+    public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        if (viewType == VIEW_TYPE_ITEM){
+            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.image_item, parent, false);
+            return new ItemViewHolder(view);
+        }
+        else {
+            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.loading_item, parent, false);
+            return new LoadingViewHolder(view);
+        }
     }
 
     @Override
-    public void onBindViewHolder(@NonNull DataAdapter.ViewHolder holder, int position) {
-        String url = Images.get(position);
-        if (url != null){
-            System.out.println(holder.imageView.toString());
-            new DownloadImageTask(holder.imageView).execute(url);
+    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
+        if (holder instanceof ItemViewHolder){
+            String url = Images.get(position);
+            System.out.println(((ItemViewHolder) holder).imageView.toString());
+            new DownloadImageTask(((ItemViewHolder) holder).imageView).execute(url);
+        }
+        else {
+            showLoadingView((LoadingViewHolder)holder, position);
         }
 
     }
@@ -60,16 +69,28 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ViewHolder> {
         return Images == null ? 0 : Images.size();
     }
 
-    public static class ViewHolder extends RecyclerView.ViewHolder{
+    private class ItemViewHolder extends RecyclerView.ViewHolder{
         ImageView imageView;
-        public ViewHolder(View view){
+        public ItemViewHolder(View view){
             super(view);
-            imageView = (ImageView)view.findViewById(R.id.image_item);
+            imageView = view.findViewById(R.id.imageLoaded);
         }
     }
 
+    private class LoadingViewHolder extends RecyclerView.ViewHolder {
 
+        ProgressBar progressBar;
 
+        public LoadingViewHolder(View view) {
+            super(view);
+            progressBar = view.findViewById(R.id.progressBar);
+        }
+    }
+
+    private void showLoadingView(LoadingViewHolder viewHolder, int position) {
+        //ProgressBar would be displayed
+
+    }
 
     private class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
         ImageView bmImage;

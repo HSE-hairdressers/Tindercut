@@ -6,7 +6,7 @@
     android:layout_height="match_parent">
 
     <ImageView
-        android:id="@+id/image_item"
+        android:id="@+id/imageLoaded"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:srcCompat="@tools:sample/avatars" />
