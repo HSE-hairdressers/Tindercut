@@ -13,6 +13,7 @@ import com.google.android.material.appbar.CollapsingToolbarLayout;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -20,6 +21,7 @@ import androidx.core.widget.NestedScrollView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.os.Handler;
 import android.provider.ContactsContract;
 import android.util.Log;
 import android.view.View;
@@ -46,6 +48,8 @@ public class ScrollingActivity extends AppCompatActivity {
     private ActivityScrollingBinding binding;
     private JSONArray hairData;
     private Bitmap ImageBitmap;
+    boolean isLoading = false;
+    private final int PAGE_SIZE = 10;
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
@@ -64,7 +68,8 @@ public class ScrollingActivity extends AppCompatActivity {
         System.out.println("Here");
         Bundle bundle = getIntent().getExtras();
         ArrayList<DataSerializable> dataArrayList = (ArrayList<DataSerializable>) bundle.getSerializable("dataArray");
-        ArrayList<String> imageUrls = new ArrayList<String>();
+        ArrayList<String> imageUrls = new ArrayList<>();
+        ArrayList<String> temp = new ArrayList<>();
 
         //Заполняем из данных
         for(int i = 0; i < dataArrayList.size(); i++){
@@ -86,13 +91,81 @@ public class ScrollingActivity extends AppCompatActivity {
 
         }
 
+        if (imageUrls.size() > PAGE_SIZE){
+            for (int i = 0; i < PAGE_SIZE; i++){
+                temp.add(imageUrls.get(i));
+            }
+        }
+        else {
+            for (int i = 0; i < imageUrls.size(); i++){
+                temp.add(imageUrls.get(i));
+            }
+        }
+
         //Получаем scrollView страницы
         RecyclerView recyclerView = (RecyclerView)findViewById(R.id.recyclerview);
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getApplicationContext());
         DataAdapter adapter = new DataAdapter(getApplicationContext(), imageUrls);
-        recyclerView.setLayoutManager(linearLayoutManager);
         recyclerView.setAdapter(adapter);
 
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+
+            @Override
+            public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+            }
+
+            @Override
+            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+
+                LinearLayoutManager linearLayoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
+
+                if (!isLoading) {
+                    if (linearLayoutManager != null && linearLayoutManager.findLastCompletelyVisibleItemPosition() == temp.size() - 1) {
+                        //bottom of list!
+                        loadMore();
+                        isLoading = true;
+                    }
+                }
+            }
+
+            private void loadMore() {
+                temp.add(null);
+                adapter.notifyItemInserted(temp.size() - 1);
+
+
+                Handler handler = new Handler();
+                handler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        temp.remove(temp.size() - 1);
+                        int scrollPosition = temp.size();
+                        adapter.notifyItemRemoved(scrollPosition);
+                        int currentSize = scrollPosition;
+                        int nextLimit = currentSize + 10;
+
+                        if (nextLimit > imageUrls.size()) {
+                            nextLimit = imageUrls.size();
+                        }
+
+                        while (currentSize - 1 < nextLimit) {
+                            temp.add(imageUrls.get(currentSize));
+                            currentSize++;
+                        }
+
+                        adapter.notifyDataSetChanged();
+                        isLoading = false;
+                    }
+                }, 2000);
+
+
+            }
+        });
+
+
+
     }
+
+
 
 }

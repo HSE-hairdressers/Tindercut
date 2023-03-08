@@ -20,6 +20,9 @@ import java.util.ResourceBundle;
 
 public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ViewHolder> {
 
+    private final int VIEW_TYPE_ITEM = 0;
+    private final int VIEW_TYPE_LOADING = 1;
+
     private final LayoutInflater inflater;
     private final ArrayList<String> Images;
 
@@ -44,8 +47,14 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ViewHolder> {
     }
 
     @Override
+    public int getItemViewType(int position) {
+        return Images.get(position) == null ? VIEW_TYPE_LOADING : VIEW_TYPE_ITEM;
+    }
+
+    @Override
     public int getItemCount() {
-        return Images.size();
+
+        return Images == null ? 0 : Images.size();
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder{
@@ -55,6 +64,8 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ViewHolder> {
             imageView = new ImageView(view.getContext());
         }
     }
+
+
 
 
     private class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
