@@ -13,7 +13,10 @@ import android.widget.ProgressBar;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.android.volley.cache.DiskLruBasedCache;
+import com.android.volley.cache.plus.ImageCache;
 import com.android.volley.misc.AsyncTask;
+import com.bumptech.glide.Glide;
 
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -50,7 +53,7 @@ public class DataAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         if (holder instanceof ItemViewHolder){
             String url = Images.get(position);
             System.out.println(((ItemViewHolder) holder).imageView.toString());
-            new DownloadImageTask(((ItemViewHolder) holder).imageView).execute(url);
+            Glide.with(((ItemViewHolder) holder).imageView.getContext()).load(url).into(((ItemViewHolder) holder).imageView);
         }
         else {
             showLoadingView((LoadingViewHolder)holder, position);
@@ -116,6 +119,7 @@ public class DataAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             bmImage.setImageBitmap(result);
         }
     }
+
 
 }
 

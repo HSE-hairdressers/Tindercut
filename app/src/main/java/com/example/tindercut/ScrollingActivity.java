@@ -49,13 +49,12 @@ public class ScrollingActivity extends AppCompatActivity {
     private JSONArray hairData;
     private Bitmap ImageBitmap;
     boolean isLoading = false;
-    private final int PAGE_SIZE = 10;
+    private final int PAGE_SIZE = 5;
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        System.out.println("?");
 
         binding = ActivityScrollingBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
@@ -66,7 +65,6 @@ public class ScrollingActivity extends AppCompatActivity {
         toolBarLayout.setTitle(getTitle());
 
         //Получаем данные
-        System.out.println("Here");
         Bundle bundle = getIntent().getExtras();
         ArrayList<DataSerializable> dataArrayList = (ArrayList<DataSerializable>) bundle.getSerializable("dataArray");
         ArrayList<String> imageUrls = new ArrayList<>();
