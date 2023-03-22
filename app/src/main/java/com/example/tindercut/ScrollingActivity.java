@@ -68,27 +68,38 @@ public class ScrollingActivity extends AppCompatActivity {
         Bundle bundle = getIntent().getExtras();
         ArrayList<DataSerializable> dataArrayList = (ArrayList<DataSerializable>) bundle.getSerializable("dataArray");
         ArrayList<String> imageUrls = new ArrayList<>();
+        //ArrayList<String> imageUrls2 = new ArrayList<>();
         ArrayList<String> temp = new ArrayList<>();
+        ArrayList<String> hairdressers = new ArrayList<>();
+
 
         //Заполняем из данных
         for(int i = 0; i < dataArrayList.size(); i++){
             try {
                 JSONObject hairDataObject = new JSONObject(dataArrayList.get(i).getData());
                 JSONArray hairImages = hairDataObject.getJSONArray("images");
+                JSONObject hairdresser = hairDataObject.getJSONObject("hairdresser");
+                String name = hairdresser.getString("name");
+
+                JSONObject hairImage = hairImages.getJSONObject(0);
+                String imageUrl = hairImage.getString("img_path");
+                imageUrls.add(imageUrl);
+                hairdressers.add(name);
 
                 //Получсаем изображения
-                for (int j = 0; j < hairImages.length(); j++) {
-                    JSONObject hairImage = hairImages.getJSONObject(j);
-                    String hairImageName = hairImage.getString("name");
-                    String imageUrl = hairImage.getString("img_path");
-                    imageUrls.add(imageUrl);
-                }
+                /*for (int j = 0; j < hairImages.length(); j++) {
+                    JSONObject hairImage2 = hairImages.getJSONObject(j);
+                    String imageUrl2 = hairImage2.getString("img_path");
+                    imageUrls2.add(imageUrl2);
+                }*/
 
             } catch (JSONException e) {
                 e.printStackTrace();
             }
 
         }
+
+        System.out.println(hairdressers);
 
         if (imageUrls.size() > PAGE_SIZE){
             for (int i = 0; i < PAGE_SIZE; i++){
@@ -103,7 +114,7 @@ public class ScrollingActivity extends AppCompatActivity {
 
         //Получаем scrollView страницы
         RecyclerView recyclerView = (RecyclerView)findViewById(R.id.recyclerview);
-        DataAdapter adapter = new DataAdapter(getApplicationContext(), temp);
+        DataAdapter adapter = new DataAdapter(getApplicationContext(), temp, hairdressers);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
 
@@ -131,6 +142,7 @@ public class ScrollingActivity extends AppCompatActivity {
 
             private void loadMore() {
                 temp.add(null);
+                hairdressers.add(null);
                 adapter.notifyItemInserted(temp.size() - 1);
 
 
@@ -139,6 +151,7 @@ public class ScrollingActivity extends AppCompatActivity {
                     @Override
                     public void run() {
                         temp.remove(temp.size() - 1);
+                        hairdressers.remove(hairdressers.size() - 1);
                         int scrollPosition = temp.size();
                         adapter.notifyItemRemoved(scrollPosition);
                         int currentSize = scrollPosition;

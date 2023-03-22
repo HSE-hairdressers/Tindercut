@@ -100,6 +100,9 @@ public class MainActivity extends AppCompatActivity implements PickiTCallbacks {
         switch (requestCode) {
             case picked_image:
                 //Получаем URI картинки:
+                if (data == null){
+                    return;
+                }
                 Uri imageUri = data.getData();
                 pickIt.getPath(imageUri, Build.VERSION.SDK_INT);
                 //Находим нужный ImageView в интерфейсе
@@ -118,13 +121,11 @@ public class MainActivity extends AppCompatActivity implements PickiTCallbacks {
                     ImageBitmap.compress(Bitmap.CompressFormat.JPEG, 100, byteArrayOutputStream);
                     byte[] bytes = byteArrayOutputStream.toByteArray();
                     final String base64Image = Base64.encodeToString(bytes, Base64.DEFAULT);
+                    ImageView.setImageBitmap(ImageBitmap);
                 }
 
-
-                //Отображаем картинку по URI
-                ImageView.setImageBitmap(ImageBitmap);
-
         }
+
 
     }
 
