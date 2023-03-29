@@ -3,7 +3,7 @@ plugins {
 }
 
 android {
-    compileSdkVersion 30
+    compileSdkVersion 33
     buildToolsVersion "30.0.3"
 
     useLibrary 'org.apache.http.legacy'
@@ -11,7 +11,7 @@ android {
     defaultConfig {
         applicationId "com.example.tindercut"
         minSdkVersion 16
-        targetSdkVersion 30
+        targetSdkVersion 33
         versionCode 1
         versionName "1.0"
 
@@ -36,6 +36,8 @@ android {
 dependencies {
     implementation 'com.github.HBiSoft:PickiT:2.0.5'
     implementation "androidx.annotation:annotation:1.1.0"
+    implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.4.1'
+    implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.4.1'
     compile 'org.apache.httpcomponents:httpcore:4.4.1'
     implementation 'dev.dworks.libs:volleyplus:+'
     implementation 'androidx.appcompat:appcompat:1.2.0'
