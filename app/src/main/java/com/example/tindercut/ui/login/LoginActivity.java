@@ -47,6 +47,7 @@ public class LoginActivity extends AppCompatActivity {
         final EditText usernameEditText = binding.username;
         final EditText passwordEditText = binding.password;
         final Button loginButton = binding.login;
+        final Button registerButton = binding.register;
         final ProgressBar loadingProgressBar = binding.loading;
 
         loginViewModel.getLoginFormState().observe(this, new Observer<LoginFormState>() {
@@ -77,10 +78,10 @@ public class LoginActivity extends AppCompatActivity {
                 }
                 if (loginResult.getSuccess() != null) {
                     updateUiWithUser(loginResult.getSuccess());
+                    setResult(Activity.RESULT_OK);
+                    //Complete and destroy login activity once successful
+                    finish();
                 }
-                setResult(Activity.RESULT_OK);
-                //Complete and destroy login activity once successful
-                finish();
             }
         });
 
@@ -109,7 +110,7 @@ public class LoginActivity extends AppCompatActivity {
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if (actionId == EditorInfo.IME_ACTION_DONE) {
                     loginViewModel.login(usernameEditText.getText().toString(),
-                            passwordEditText.getText().toString());
+                            passwordEditText.getText().toString(), getApplicationContext());
                 }
                 return false;
             }
@@ -120,9 +121,24 @@ public class LoginActivity extends AppCompatActivity {
             public void onClick(View v) {
                 loadingProgressBar.setVisibility(View.VISIBLE);
                 loginViewModel.login(usernameEditText.getText().toString(),
-                        passwordEditText.getText().toString());
+                        passwordEditText.getText().toString(), getApplicationContext());
             }
         });
+        registerButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                loadingProgressBar.setVisibility(View.VISIBLE);
+//                openRegisterActivity();
+                setResult(Activity.RESULT_OK);
+                //Complete and destroy login activity once successful
+                finish();
+            }
+        });
+    }
+
+    private void openRegisterActivity() {
+//        Intent intent = new Intent(this, RegisterActivity.class);
+//        startActivity(intent);
     }
 
     private void openMainActivity() {

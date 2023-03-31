@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.util.Patterns;
 
 import com.example.tindercut.data.LoginRepository;
@@ -12,36 +13,7 @@ import com.example.tindercut.data.Result;
 import com.example.tindercut.data.model.LoggedInUser;
 import com.example.tindercut.R;
 
-import android.os.Bundle;
-import android.view.View;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.ProgressBar;
-import android.widget.TextView;
-import android.widget.Toast;
-
-import androidx.appcompat.app.AppCompatActivity;
-
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.error.VolleyError;
-import com.android.volley.request.StringRequest;
-import com.android.volley.toolbox.Volley;
-
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.util.HashMap;
-import java.util.Map;
-
-import android.content.Context;
-import android.content.ContextWrapper;
 public class LoginViewModel extends ViewModel {
-
-    private EditText nameEdt, jobEdt;
-    private Button postDataBtn;
-    private TextView responseTV;
-    private ProgressBar loadingPB;
     private MutableLiveData<LoginFormState> loginFormState = new MutableLiveData<>();
     private MutableLiveData<LoginResult> loginResult = new MutableLiveData<>();
     private LoginRepository loginRepository;
@@ -58,9 +30,9 @@ public class LoginViewModel extends ViewModel {
         return loginResult;
     }
 
-    public void login(String username, String password) {
+    public void login(String username, String password, Context context) {
         // can be launched in a separate asynchronous job
-        Result<LoggedInUser> result = loginRepository.login(username, password);
+        Result<LoggedInUser> result = loginRepository.login(username, password, context);
 
         if (result instanceof Result.Success) {
             LoggedInUser data = ((Result.Success<LoggedInUser>) result).getData();
