@@ -30,29 +30,16 @@
                 android:textColor="@color/white"
                 android:textSize="34sp"
                 android:textStyle="bold"
-                app:layout_constraintBottom_toTopOf="@+id/imageLoaded"
+                app:layout_constraintBottom_toTopOf="@+id/horizontalRecycler"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.498"
                 app:layout_constraintStart_toStartOf="parent" />
-
-            <ImageView
-                android:id="@+id/imageLoaded"
-                android:layout_width="327dp"
-                android:layout_height="292dp"
-                android:layout_below="@id/textLoaded"
-                android:layout_centerInParent="true"
-                android:layout_marginBottom="97dp"
-                android:scaleType="centerCrop"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                tools:srcCompat="@tools:sample/avatars" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/horizontalRecycler"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_below="@id/imageLoaded" />
+                android:layout_below="@id/textLoaded" />
 
         </RelativeLayout>
 

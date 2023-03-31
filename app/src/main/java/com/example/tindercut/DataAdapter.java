@@ -54,8 +54,9 @@ public class DataAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             System.out.println(position);
             System.out.println(url);
             //System.out.println(((ItemViewHolder) holder).imageView.toString());
-            Glide.with(((ItemViewHolder) holder).imageView.getContext()).load(url).into(((ItemViewHolder) holder).imageView);
             ((ItemViewHolder) holder).textView.setText(hairdressers.get(position));
+            horizontalView(((ItemViewHolder) holder));
+
         }
         else {
             showLoadingView((LoadingViewHolder)holder, position);
@@ -76,11 +77,13 @@ public class DataAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private class ItemViewHolder extends RecyclerView.ViewHolder{
         ImageView imageView;
+
+        RecyclerView recyclerView;
         TextView textView;
         public ItemViewHolder(View view){
             super(view);
             textView = view.findViewById(R.id.textLoaded);
-            imageView = view.findViewById(R.id.imageLoaded);
+            recyclerView = view.findViewById(R.id.horizontalRecycler);
         }
     }
 
@@ -104,7 +107,7 @@ public class DataAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         }
     }
 
-    private void horizontalView(HorizontalViewHolder holder) {
+    private void horizontalView(ItemViewHolder holder) {
         HorizontalDataAdapter adapter = new HorizontalDataAdapter(Images);
         holder.recyclerView.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false));
         holder.recyclerView.setAdapter(adapter);
