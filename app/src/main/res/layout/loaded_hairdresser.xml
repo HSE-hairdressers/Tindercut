@@ -10,25 +10,32 @@
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hapticFeedbackEnabled="false"
-        app:cardBackgroundColor="@color/red_peach"
-        app:cardCornerRadius="45dp">
+        android:layout_marginBottom="20dp"
+        android:hapticFeedbackEnabled="false">
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
+            <ImageView
+                android:id="@+id/imageView2"
+                android:layout_width="40dp"
+                android:layout_height="30dp"
+                android:layout_above="@id/horizontalRecycler"
+                android:layout_marginBottom="4dp"
+                tools:srcCompat="@tools:sample/avatars" />
+
             <TextView
                 android:id="@+id/textLoaded"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
-                android:layout_marginBottom="22dp"
+                android:layout_marginStart="40dp"
+                android:layout_marginLeft="40dp"
                 android:paddingTop="10dp"
                 android:shadowColor="@color/peachpuff"
                 android:text="Hairdresser"
-                android:textColor="@color/white"
-                android:textSize="34sp"
+                android:textColor="@color/red_peach"
+                android:textSize="24sp"
                 android:textStyle="bold"
                 app:layout_constraintBottom_toTopOf="@+id/horizontalRecycler"
                 app:layout_constraintEnd_toEndOf="parent"
