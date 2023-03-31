@@ -43,6 +43,7 @@ import java.io.InputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 
 public class ScrollingActivity extends AppCompatActivity {
 
@@ -68,8 +69,7 @@ public class ScrollingActivity extends AppCompatActivity {
         //Получаем данные
         Bundle bundle = getIntent().getExtras();
         ArrayList<DataSerializable> dataArrayList = (ArrayList<DataSerializable>) bundle.getSerializable("dataArray");
-        ArrayList<String> imageUrls = new ArrayList<>();
-        ArrayList<String> imageUrls2 = new ArrayList<>();
+        ArrayList<ArrayList<String>> imageUrlsArray = new ArrayList<>();
         ArrayList<String> hairdressers = new ArrayList<>();
 
 
@@ -81,20 +81,22 @@ public class ScrollingActivity extends AppCompatActivity {
                 JSONObject hairdresser = hairDataObject.getJSONObject("hairdresser");
                 String name = hairdresser.getString("name");
 
-                JSONObject hairImage = hairImages.getJSONObject(0);
-                String imageUrl = hairImage.getString("img_path");
-                imageUrls.add(imageUrl);
                 hairdressers.add(name);
 
+                ArrayList<String> imageUrls = new ArrayList<>();
+
                 for (int j = 0; j < hairImages.length(); j++) {
-                    JSONObject hairImage2 = hairImages.getJSONObject(j);
-                    String imageUrl2 = hairImage2.getString("img_path");
-                    imageUrls2.add(imageUrl2);
+                    JSONObject hairImage = hairImages.getJSONObject(j);
+                    String imageUrl = hairImage.getString("img_path");
+                    imageUrls.add(imageUrl);
                 }
+
+                imageUrlsArray.add(imageUrls);
 
             } catch (JSONException e) {
                 e.printStackTrace();
             }
+
 
         }
 
@@ -102,7 +104,7 @@ public class ScrollingActivity extends AppCompatActivity {
 
         //Получаем scrollView страницы
         RecyclerView recyclerView = (RecyclerView)findViewById(R.id.recyclerview);
-        DataAdapter adapter = new DataAdapter(getApplicationContext(), imageUrls2, hairdressers);
+        DataAdapter adapter = new DataAdapter(getApplicationContext(), imageUrlsArray, hairdressers);
         recyclerView.setAdapter(adapter);
         adapter.notifyDataSetChanged();
 

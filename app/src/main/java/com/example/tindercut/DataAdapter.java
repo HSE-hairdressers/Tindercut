@@ -21,12 +21,12 @@ public class DataAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private final int VIEW_TYPE_LOADING = 1;
 
     private final LayoutInflater inflater;
-    private final ArrayList<String> Images;
+    private final ArrayList<ArrayList<String>> Images;
     private final ArrayList<String> hairdressers;
 
     private Context context;
 
-    public DataAdapter(Context context, ArrayList<String> images, ArrayList<String> hairdressers) {
+    public DataAdapter(Context context, ArrayList<ArrayList<String>> images, ArrayList<String> hairdressers) {
         this.context = context;
         this.inflater = LayoutInflater.from(context);
         this.Images = images;
@@ -50,12 +50,11 @@ public class DataAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         if (holder instanceof ItemViewHolder){
-            String url = Images.get(position);
-            System.out.println(position);
-            System.out.println(url);
+
             //System.out.println(((ItemViewHolder) holder).imageView.toString());
             ((ItemViewHolder) holder).textView.setText(hairdressers.get(position));
-            horizontalView(((ItemViewHolder) holder));
+
+            horizontalView(((ItemViewHolder) holder), position);
 
         }
         else {
@@ -107,8 +106,8 @@ public class DataAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         }
     }
 
-    private void horizontalView(ItemViewHolder holder) {
-        HorizontalDataAdapter adapter = new HorizontalDataAdapter(Images);
+    private void horizontalView(ItemViewHolder holder, int position) {
+        HorizontalDataAdapter adapter = new HorizontalDataAdapter(Images.get(position));
         holder.recyclerView.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false));
         holder.recyclerView.setAdapter(adapter);
     }
