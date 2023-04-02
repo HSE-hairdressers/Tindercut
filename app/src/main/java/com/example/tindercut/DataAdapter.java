@@ -1,6 +1,8 @@
 package com.example.tindercut;
 
 import android.content.Context;
+import android.content.Intent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -77,12 +79,23 @@ public class DataAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private class ItemViewHolder extends RecyclerView.ViewHolder{
         ImageView imageView;
 
+        ImageView hairdresserIcon;
         RecyclerView recyclerView;
         TextView textView;
         public ItemViewHolder(View view){
             super(view);
             textView = view.findViewById(R.id.textLoaded);
             recyclerView = view.findViewById(R.id.horizontalRecycler);
+
+            hairdresserIcon = view.findViewById(R.id.hairdresserIcon);
+            hairdresserIcon.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent hairdresserProfile = new Intent(context, HairdresserActivity.class);
+                    hairdresserProfile.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    context.startActivity(hairdresserProfile);
+                }
+            });
         }
     }
 

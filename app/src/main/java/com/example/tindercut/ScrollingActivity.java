@@ -50,6 +50,7 @@ public class ScrollingActivity extends AppCompatActivity {
     private ActivityScrollingBinding binding;
     private JSONArray hairData;
     private Bitmap ImageBitmap;
+    private ImageView hairdresserIcon;
     boolean isLoading = false;
     private final int PAGE_SIZE = 5;
 
@@ -111,6 +112,8 @@ public class ScrollingActivity extends AppCompatActivity {
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.VERTICAL, false);
         recyclerView.setLayoutManager(linearLayoutManager);
         recyclerView.setAdapter(adapter);
+
+
 
     }
 

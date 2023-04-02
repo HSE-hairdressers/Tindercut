@@ -18,12 +18,14 @@
             android:layout_height="match_parent">
 
             <ImageView
-                android:id="@+id/imageView2"
+                android:id="@+id/hairdresserIcon"
                 android:layout_width="40dp"
                 android:layout_height="30dp"
                 android:layout_above="@id/horizontalRecycler"
                 android:layout_marginBottom="4dp"
-                tools:srcCompat="@tools:sample/avatars" />
+                tools:srcCompat="@tools:sample/avatars"
+                android:clickable="true"
+                android:focusable="true"/>
 
             <TextView
                 android:id="@+id/textLoaded"
