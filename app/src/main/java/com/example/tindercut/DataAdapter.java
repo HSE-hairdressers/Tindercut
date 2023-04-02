@@ -1,6 +1,8 @@
 package com.example.tindercut;
 
 import android.content.Context;
+import android.content.Intent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,12 +23,12 @@ public class DataAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private final int VIEW_TYPE_LOADING = 1;
 
     private final LayoutInflater inflater;
-    private final ArrayList<String> Images;
+    private final ArrayList<ArrayList<String>> Images;
     private final ArrayList<String> hairdressers;
 
     private Context context;
 
-    public DataAdapter(Context context, ArrayList<String> images, ArrayList<String> hairdressers) {
+    public DataAdapter(Context context, ArrayList<ArrayList<String>> images, ArrayList<String> hairdressers) {
         this.context = context;
         this.inflater = LayoutInflater.from(context);
         this.Images = images;
@@ -50,12 +52,12 @@ public class DataAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         if (holder instanceof ItemViewHolder){
-            String url = Images.get(position);
-            System.out.println(position);
-            System.out.println(url);
+
             //System.out.println(((ItemViewHolder) holder).imageView.toString());
-            Glide.with(((ItemViewHolder) holder).imageView.getContext()).load(url).into(((ItemViewHolder) holder).imageView);
             ((ItemViewHolder) holder).textView.setText(hairdressers.get(position));
+
+            horizontalView(((ItemViewHolder) holder), position);
+
         }
         else {
             showLoadingView((LoadingViewHolder)holder, position);
@@ -76,11 +78,24 @@ public class DataAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private class ItemViewHolder extends RecyclerView.ViewHolder{
         ImageView imageView;
+
+        ImageView hairdresserIcon;
+        RecyclerView recyclerView;
         TextView textView;
         public ItemViewHolder(View view){
             super(view);
             textView = view.findViewById(R.id.textLoaded);
-            imageView = view.findViewById(R.id.imageLoaded);
+            recyclerView = view.findViewById(R.id.horizontalRecycler);
+
+            hairdresserIcon = view.findViewById(R.id.hairdresserIcon);
+            hairdresserIcon.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent hairdresserProfile = new Intent(context, HairdresserActivity.class);
+                    hairdresserProfile.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    context.startActivity(hairdresserProfile);
+                }
+            });
         }
     }
 
@@ -104,8 +119,8 @@ public class DataAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         }
     }
 
-    private void horizontalView(HorizontalViewHolder holder) {
-        HorizontalDataAdapter adapter = new HorizontalDataAdapter(Images);
+    private void horizontalView(ItemViewHolder holder, int position) {
+        HorizontalDataAdapter adapter = new HorizontalDataAdapter(Images.get(position));
         holder.recyclerView.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false));
         holder.recyclerView.setAdapter(adapter);
     }

@@ -23,6 +23,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Handler;
 import android.provider.ContactsContract;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
 import android.widget.AbsListView;
@@ -42,12 +43,14 @@ import java.io.InputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 
 public class ScrollingActivity extends AppCompatActivity {
 
     private ActivityScrollingBinding binding;
     private JSONArray hairData;
     private Bitmap ImageBitmap;
+    private ImageView hairdresserIcon;
     boolean isLoading = false;
     private final int PAGE_SIZE = 5;
 
@@ -67,9 +70,7 @@ public class ScrollingActivity extends AppCompatActivity {
         //Получаем данные
         Bundle bundle = getIntent().getExtras();
         ArrayList<DataSerializable> dataArrayList = (ArrayList<DataSerializable>) bundle.getSerializable("dataArray");
-        ArrayList<String> imageUrls = new ArrayList<>();
-        //ArrayList<String> imageUrls2 = new ArrayList<>();
-        ArrayList<String> temp = new ArrayList<>();
+        ArrayList<ArrayList<String>> imageUrlsArray = new ArrayList<>();
         ArrayList<String> hairdressers = new ArrayList<>();
 
 
@@ -81,99 +82,36 @@ public class ScrollingActivity extends AppCompatActivity {
                 JSONObject hairdresser = hairDataObject.getJSONObject("hairdresser");
                 String name = hairdresser.getString("name");
 
-                JSONObject hairImage = hairImages.getJSONObject(0);
-                String imageUrl = hairImage.getString("img_path");
-                imageUrls.add(imageUrl);
                 hairdressers.add(name);
 
-                //Получсаем изображения
-                /*for (int j = 0; j < hairImages.length(); j++) {
-                    JSONObject hairImage2 = hairImages.getJSONObject(j);
-                    String imageUrl2 = hairImage2.getString("img_path");
-                    imageUrls2.add(imageUrl2);
-                }*/
+                ArrayList<String> imageUrls = new ArrayList<>();
+
+                for (int j = 0; j < hairImages.length(); j++) {
+                    JSONObject hairImage = hairImages.getJSONObject(j);
+                    String imageUrl = hairImage.getString("img_path");
+                    imageUrls.add(imageUrl);
+                }
+
+                imageUrlsArray.add(imageUrls);
 
             } catch (JSONException e) {
                 e.printStackTrace();
             }
 
+
         }
 
         System.out.println(hairdressers);
 
-        if (imageUrls.size() > PAGE_SIZE){
-            for (int i = 0; i < PAGE_SIZE; i++){
-                temp.add(imageUrls.get(i));
-            }
-        }
-        else {
-            for (int i = 0; i < imageUrls.size(); i++){
-                temp.add(imageUrls.get(i));
-            }
-        }
-
         //Получаем scrollView страницы
         RecyclerView recyclerView = (RecyclerView)findViewById(R.id.recyclerview);
-        DataAdapter adapter = new DataAdapter(getApplicationContext(), temp, hairdressers);
+        DataAdapter adapter = new DataAdapter(getApplicationContext(), imageUrlsArray, hairdressers);
         recyclerView.setAdapter(adapter);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
+        adapter.notifyDataSetChanged();
 
-        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
-
-            @Override
-            public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
-                super.onScrollStateChanged(recyclerView, newState);
-            }
-
-            @Override
-            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
-                super.onScrolled(recyclerView, dx, dy);
-
-                LinearLayoutManager linearLayoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
-
-                if (!isLoading) {
-                    if (linearLayoutManager != null && linearLayoutManager.findLastCompletelyVisibleItemPosition() == temp.size() - 1) {
-                        //bottom of list!
-                        loadMore();
-                        isLoading = true;
-                    }
-                }
-            }
-
-            private void loadMore() {
-                temp.add(null);
-                hairdressers.add(null);
-                adapter.notifyItemInserted(temp.size() - 1);
-
-
-                Handler handler = new Handler();
-                handler.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        temp.remove(temp.size() - 1);
-                        hairdressers.remove(hairdressers.size() - 1);
-                        int scrollPosition = temp.size();
-                        adapter.notifyItemRemoved(scrollPosition);
-                        int currentSize = scrollPosition;
-                        int nextLimit = currentSize + 10;
-
-                        if (nextLimit > imageUrls.size()) {
-                            nextLimit = imageUrls.size();
-                        }
-
-                        while (currentSize - 1 < nextLimit) {
-                            temp.add(imageUrls.get(currentSize - 1));
-                            currentSize++;
-                        }
-
-                        adapter.notifyDataSetChanged();
-                        isLoading = false;
-                    }
-                }, 2000);
-
-
-            }
-        });
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.VERTICAL, false);
+        recyclerView.setLayoutManager(linearLayoutManager);
+        recyclerView.setAdapter(adapter);
 
 
 

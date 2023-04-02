@@ -141,7 +141,6 @@ public class MainActivity extends AppCompatActivity implements PickiTCallbacks {
                             JSONObject responseJSON = new JSONObject(response);
                             JSONArray hairData = responseJSON.getJSONArray("data");
 
-
                             //Выполняем проверку успеха отправки изображения
                             String requestResult = responseJSON.getString("result");
                             if (requestResult.equals("Ok")) {
@@ -152,7 +151,6 @@ public class MainActivity extends AppCompatActivity implements PickiTCallbacks {
                                 for(int i = 0; i < hairData.length(); i++){
                                     arrayToSend.add(new DataSerializable(hairData.get(i).toString()));
                                 }
-
 
                                 Bundle bundle = new Bundle();
                                 bundle.putSerializable("dataArray", arrayToSend);

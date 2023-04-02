@@ -34,10 +34,8 @@ public class    HorizontalDataAdapter extends RecyclerView.Adapter<HorizontalDat
     public void onBindViewHolder(ViewHolder holder, final int position) {
 
         String url = mImageUrls.get(position);
-        Glide.with(holder.imageView.getContext())
-                .asBitmap()
-                .load(mImageUrls.get(position))
-                .into(holder.imageView);
+
+        Glide.with((holder).imageView.getContext()).load(url).into((holder).imageView);
 
     }
 

@@ -10,49 +10,45 @@
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hapticFeedbackEnabled="false"
-        app:cardBackgroundColor="@color/red_peach"
-        app:cardCornerRadius="45dp">
+        android:layout_marginBottom="20dp"
+        android:hapticFeedbackEnabled="false">
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
+            <ImageView
+                android:id="@+id/hairdresserIcon"
+                android:layout_width="40dp"
+                android:layout_height="30dp"
+                android:layout_above="@id/horizontalRecycler"
+                android:layout_marginBottom="4dp"
+                tools:srcCompat="@tools:sample/avatars"
+                android:clickable="true"
+                android:focusable="true"/>
+
             <TextView
                 android:id="@+id/textLoaded"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
-                android:layout_marginBottom="22dp"
+                android:layout_marginStart="40dp"
+                android:layout_marginLeft="40dp"
                 android:paddingTop="10dp"
                 android:shadowColor="@color/peachpuff"
                 android:text="Hairdresser"
-                android:textColor="@color/white"
-                android:textSize="34sp"
+                android:textColor="@color/red_peach"
+                android:textSize="24sp"
                 android:textStyle="bold"
-                app:layout_constraintBottom_toTopOf="@+id/imageLoaded"
+                app:layout_constraintBottom_toTopOf="@+id/horizontalRecycler"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.498"
                 app:layout_constraintStart_toStartOf="parent" />
-
-            <ImageView
-                android:id="@+id/imageLoaded"
-                android:layout_width="327dp"
-                android:layout_height="292dp"
-                android:layout_below="@id/textLoaded"
-                android:layout_centerInParent="true"
-                android:layout_marginBottom="97dp"
-                android:scaleType="centerCrop"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                tools:srcCompat="@tools:sample/avatars" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/horizontalRecycler"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_below="@id/imageLoaded" />
+                android:layout_below="@id/textLoaded" />
 
         </RelativeLayout>
 
