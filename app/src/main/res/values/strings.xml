@@ -15,4 +15,10 @@
     <string name="login_failed">"Login failed"</string>
     <string name="action_register"><u>Register</u></string>
     <string name="title_activity_register">RegisterActivity</string>
+    <string name="prompt_number">Телефон</string>
+    <string name="prompt_name">ФИО</string>
+    <string name="prompt_password_ru">Пароль</string>
+    <string name="prompt_address">Адрес</string>
+    <string name="prompt_company">Компания</string>
+    <string name="prompt_password_verification">Подтвердите пароль</string>
 </resources>

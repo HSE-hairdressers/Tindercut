@@ -28,6 +28,7 @@ import com.example.tindercut.R;
 import com.example.tindercut.ui.login.LoginViewModel;
 import com.example.tindercut.ui.login.LoginViewModelFactory;
 import com.example.tindercut.databinding.ActivityLoginBinding;
+import com.example.tindercut.ui.register.RegisterActivity;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -50,6 +51,7 @@ public class LoginActivity extends AppCompatActivity {
         final Button registerButton = binding.register;
         final ProgressBar loadingProgressBar = binding.loading;
 
+        registerButton.setEnabled(true);
         loginViewModel.getLoginFormState().observe(this, new Observer<LoginFormState>() {
             @Override
             public void onChanged(@Nullable LoginFormState loginFormState) {
@@ -128,7 +130,7 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 loadingProgressBar.setVisibility(View.VISIBLE);
-//                openRegisterActivity();
+                openRegisterActivity();
                 setResult(Activity.RESULT_OK);
                 //Complete and destroy login activity once successful
                 finish();
@@ -137,8 +139,8 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void openRegisterActivity() {
-//        Intent intent = new Intent(this, RegisterActivity.class);
-//        startActivity(intent);
+        Intent intent = new Intent(this, RegisterActivity.class);
+        startActivity(intent);
     }
 
     private void openMainActivity() {

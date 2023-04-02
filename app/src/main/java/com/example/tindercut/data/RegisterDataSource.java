@@ -29,7 +29,7 @@ import android.widget.TextView;
 /**
  * Class that handles authentication w/ login credentials and retrieves user information.
  */
-public class LoginDataSource {
+public class RegisterDataSource {
     private EditText nameEdt, jobEdt;
     private Button postDataBtn;
     private TextView responseTV;
@@ -37,13 +37,12 @@ public class LoginDataSource {
 
     private String name;
     private String result;
-    public Result<LoggedInUser> login(String username, String password, Context context) {
+    public Result<LoggedInUser> register(HashMap<String, String> info, Context context) {
         try {
             // TODO: handle loggedInUser authentication
-            checkLoginInfo(username, password, context);
+            checkRegisterInfo(info, context);
             if (Objects.equals(result, "Ok")) {
-                LoggedInUser user =
-                        new LoggedInUser(java.util.UUID.randomUUID().toString(), name);
+                LoggedInUser user = new LoggedInUser(java.util.UUID.randomUUID().toString(), info.get("name"));
                 return new Result.Success<>(user);
             } else {
                 return new Result.Error(new AuthFailureError("Wrong username or password"));
@@ -53,7 +52,7 @@ public class LoginDataSource {
         }
     }
 
-    private void checkLoginInfo(String username, String password, Context context) {
+    private void checkRegisterInfo(HashMap<String, String> info, Context context) {
         // url to post our data
         String url = "http://79.137.206.63:8011/login";
         loadingPB.setVisibility(View.VISIBLE);
@@ -74,7 +73,7 @@ public class LoginDataSource {
                     // below are the strings which we
                     // extract from our json object.
                     result = respObj.getString("result");
-                    name = respObj.getString("response");
+
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -88,18 +87,7 @@ public class LoginDataSource {
         }) {
             @Override
             protected Map<String, String> getParams() {
-                // below line we are creating a map for
-                // storing our values in key and value pair.
-                Map<String, String> params = new HashMap<String, String>();
-
-                // on below line we are passing our key
-                // and value pair to our parameters.
-                params.put("username", username);
-                params.put("password", password);
-
-                // at last we are
-                // returning our params.
-                return params;
+                return info;
             }
         };
         // below line is to make

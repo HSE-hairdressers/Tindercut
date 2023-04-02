@@ -20,13 +20,11 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="m" >
         <activity
-            android:name=".ui.login.RegisterActivity"
-            android:exported="false"
-            android:label="@string/title_activity_register" />
+            android:name=".ui.register.RegisterActivity"
+            android:exported="false" />
         <activity
             android:name=".ui.login.LoginActivity"
             android:exported="true"
-            android:label="@string/title_activity_login"
             android:theme="@style/Theme.Tindercut.NoActionBar" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -38,7 +36,7 @@
             android:name=".ScrollingActivity"
             android:label="@string/title_activity_scrolling"
             android:theme="@style/Theme.Tindercut.NoActionBar" />
-        <activity android:name=".MainActivity" >
+        <activity android:name=".MainActivity">
 
             <!-- <intent-filter> -->
             <!-- <action android:name="android.intent.action.MAIN" /> -->
