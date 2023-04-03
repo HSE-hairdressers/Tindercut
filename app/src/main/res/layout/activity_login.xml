@@ -49,6 +49,7 @@
         android:enabled="false"
         android:text="@string/action_sign_in_short"
         android:textColor="@color/white"
+        android:textStyle="bold"
         app:backgroundTint="#F44336"
         app:cornerRadius="45dp"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -68,14 +69,13 @@
         android:text="@string/action_register"
         android:textColor="?android:attr/textColorPrimaryNoDisable"
         android:textStyle="bold"
-        app:backgroundTint="?android:attr/windowSplashScreenBackground"
+        app:backgroundTint="?android:attr/textColorTertiaryInverse"
         app:cornerRadius="45dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/password"
-        app:layout_constraintVertical_bias="0.461" />
+        app:layout_constraintVertical_bias="0.455" />
 
     <ProgressBar
         android:id="@+id/loading"

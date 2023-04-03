@@ -51,9 +51,19 @@ public class RegisterViewModel extends ViewModel {
         } else if (!isPasswordValid(info.get("password"))) {
             registerFormState.setValue(new RegisterFormState(null, R.string.invalid_password,
                     null, null, null, null, null));
+        } else if (!isVerificationCorrect(info.get("password"), info.get("verification"))) {
+            registerFormState.setValue(new RegisterFormState(null, null,
+                    null, null, null, null, R.string.verification_error));
         } else {
             registerFormState.setValue(new RegisterFormState(true));
         }
+    }
+
+    private boolean isVerificationCorrect(String password, String verification) {
+        if (password == null) {
+            return false;
+        }
+        return password.equals(verification);
     }
 
     // A placeholder username validation check
