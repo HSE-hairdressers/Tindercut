@@ -17,6 +17,7 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 
 /**
@@ -45,6 +46,7 @@ public class RegisterDataSource {
         String url = "http://79.137.206.63:8011/reg";
         // creating a new variable for our request queue
         RequestQueue queue = Volley.newRequestQueue(context);
+        ((Map<String, String>) info).remove(((Map<String, String>) info).get("verification"));
         JSONObject object = new JSONObject(info);
 
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, url, object,

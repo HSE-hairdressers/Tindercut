@@ -27,9 +27,7 @@ public class LoginDataSource {
     public Result<LoggedInUser> login(String username, String password, Context context) {
         try {
             // TODO: handle loggedInUser authentication
-            System.out.println("!!!"+username+" "+password);
             checkLoginInfo(username, password, context);
-            System.out.println("!!"+result);
             if (Objects.equals(result, "Ok")) {
                 LoggedInUser user =
                         new LoggedInUser(java.util.UUID.randomUUID().toString(), name);
