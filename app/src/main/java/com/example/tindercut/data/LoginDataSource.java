@@ -42,7 +42,7 @@ public class LoginDataSource {
 
     private void checkLoginInfo(String username, String password, Context context) {
         // url to post our data
-        String url = "http://79.137.206.63:8011/login";
+        String url = "http://79.137.206.63:8011/auth/login";
         // creating a new variable for our request queue
         RequestQueue queue = Volley.newRequestQueue(context);
         JSONObject object = new JSONObject();
