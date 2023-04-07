@@ -6,14 +6,21 @@
     android:layout_height="match_parent"
     tools:context=".HairdresserActivity">
 
-    <TextView
+    <EditText
         android:id="@+id/hairdresserName"
         android:layout_width="220dp"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="30dp"
         android:layout_marginStart="30dp"
         android:layout_marginTop="112dp"
         android:text="Hairdresser"
         android:textSize="30sp"
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:focusable="false"
+        android:longClickable="false"
+        android:cursorVisible="false"
+        android:background="@android:color/transparent"
         app:layout_constraintStart_toEndOf="@+id/cardView"
         app:layout_constraintTop_toTopOf="parent" />
 

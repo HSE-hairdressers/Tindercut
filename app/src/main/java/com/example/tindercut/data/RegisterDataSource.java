@@ -1,6 +1,7 @@
 package com.example.tindercut.data;
 
 import android.content.Context;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.android.volley.Request;
@@ -43,7 +44,7 @@ public class RegisterDataSource {
 
     private void checkRegisterInfo(HashMap<String, String> info, Context context) {
         // url to post our data
-        String url = "http://79.137.206.63:8011/reg";
+        String url = "http://79.137.206.63:8011/auth/registration";
         // creating a new variable for our request queue
         RequestQueue queue = Volley.newRequestQueue(context);
         ((Map<String, String>) info).remove(((Map<String, String>) info).get("verification"));

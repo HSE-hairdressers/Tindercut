@@ -2,6 +2,7 @@ package com.example.tindercut;
 
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -43,4 +44,17 @@ public class HairdresserActivity extends AppCompatActivity {
 
         Log.v("DEV", "Activity created");
     }
+
+    private void lockText(EditText text){
+        text.setFocusable(false);
+        text.setLongClickable(false);
+        text.setCursorVisible(false);
+    }
+
+    private void unlockText(EditText text){
+        text.setFocusable(true);
+        text.setLongClickable(true);
+        text.setCursorVisible(true);
+    }
+
 }
