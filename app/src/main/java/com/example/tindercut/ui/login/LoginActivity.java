@@ -1,23 +1,11 @@
 package com.example.tindercut.ui.login;
 
-import static androidx.constraintlayout.motion.utils.Oscillator.TAG;
-
-import android.accounts.AccountManager;
 import android.app.Activity;
-
-import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProvider;
-
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-
-import androidx.annotation.Nullable;
-import androidx.annotation.StringRes;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
@@ -27,17 +15,24 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.android.volley.misc.AsyncTask;
+import androidx.annotation.Nullable;
+import androidx.annotation.StringRes;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
+
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.error.VolleyError;
+import com.android.volley.request.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
 import com.example.tindercut.MainActivity;
 import com.example.tindercut.R;
+import com.example.tindercut.data.User;
 import com.example.tindercut.data.model.LoggedInUser;
-import com.example.tindercut.ui.login.LoginViewModel;
-import com.example.tindercut.ui.login.LoginViewModelFactory;
 import com.example.tindercut.databinding.ActivityLoginBinding;
 import com.example.tindercut.ui.register.RegisterActivity;
-import com.google.android.gms.auth.GoogleAuthException;
-import com.google.android.gms.auth.GoogleAuthUtil;
-import com.google.android.gms.auth.UserRecoverableAuthException;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
@@ -46,7 +41,10 @@ import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.Task;
 
-import java.io.IOException;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.Objects;
 
 public class LoginActivity extends AppCompatActivity {
     private final static String G_PLUS_SCOPE =
@@ -66,6 +64,12 @@ public class LoginActivity extends AppCompatActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        if (User.isLogin(getApplicationContext())) {
+            updateUiWithUser(new LoggedInUserView(User.getName(getApplicationContext())));
+            openMainActivity();
+            finish();
+        }
+
         com.example.tindercut.databinding.ActivityLoginBinding binding = ActivityLoginBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
@@ -83,7 +87,7 @@ public class LoginActivity extends AppCompatActivity {
 
         gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestEmail().build();
         gsc = GoogleSignIn.getClient(this, gso);
-        checkGoogleAuth();
+//        checkGoogleAuth();
         loginViewModel.getLoginFormState().observe(this, new Observer<LoginFormState>() {
             @Override
             public void onChanged(@Nullable LoginFormState loginFormState) {
@@ -154,7 +158,9 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 loadingProgressBar.setVisibility(View.VISIBLE);
-                loginViewModel.login(usernameEditText.getText().toString(),
+//                loginViewModel.login(usernameEditText.getText().toString(),
+//                        passwordEditText.getText().toString(), getApplicationContext());
+                checkLoginInfo(usernameEditText.getText().toString(),
                         passwordEditText.getText().toString(), getApplicationContext());
             }
         });
@@ -204,41 +210,6 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
 
-
-//    @Override
-//    protected void onActivityResult(final int requestCode, final int resultCode,
-//                                    final Intent data) {
-//        super.onActivityResult(requestCode, resultCode, data);
-//        if (requestCode == 123 && resultCode == RESULT_OK) {
-//            final String accountName = data.getStringExtra(AccountManager.KEY_ACCOUNT_NAME);
-//            AsyncTask<Void, Void, String> getToken = new AsyncTask<Void, Void, String>() {
-//                @Override
-//                protected String doInBackground(Void... params) {
-//                    try {
-//                        String token = GoogleAuthUtil.getToken(LoginActivity.this,
-//                                accountName, SCOPES);
-//                        return token;
-//
-//                    } catch (UserRecoverableAuthException userAuthEx) {
-//                        startActivityForResult(userAuthEx.getIntent(), 123);
-//                    } catch (IOException ioEx) {
-//                        Log.d(TAG, "IOException");
-//                    } catch (GoogleAuthException fatalAuthEx) {
-//                        Log.d(TAG, "Fatal Authorization Exception" + fatalAuthEx.getLocalizedMessage());
-//                    }
-//                    return null;
-//                }
-//
-//                @Override
-//                protected void onPostExecute(String token) {
-//                    ;
-//                }
-//
-//            };
-//            getToken.execute(null, null, null);
-//        }
-//    }
-
     private void openRegisterActivity() {
         Intent intent = new Intent(this, RegisterActivity.class);
         startActivity(intent);
@@ -249,7 +220,7 @@ public class LoginActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-    private void updateUiWithUser(LoggedInUserView model) {
+    public void updateUiWithUser(LoggedInUserView model) {
         String welcome = getString(R.string.welcome) + model.getDisplayName();
         // TODO : initiate successful logged in experience
         Toast.makeText(getApplicationContext(), welcome, Toast.LENGTH_LONG).show();
@@ -258,5 +229,46 @@ public class LoginActivity extends AppCompatActivity {
 
     private void showLoginFailed(@StringRes Integer errorString) {
         Toast.makeText(getApplicationContext(), errorString, Toast.LENGTH_SHORT).show();
+    }
+
+    private void checkLoginInfo(String username, String password, Context context) {
+        // url to post our data
+        String url = "http://79.137.206.63:8011/auth/login";
+        // creating a new variable for our request queue
+        RequestQueue queue = Volley.newRequestQueue(context);
+        JSONObject object = new JSONObject();
+        try {
+            //input your API parameters
+            object.put("username", username);
+            object.put("password", password);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, url, object,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        try {
+                            String result = response.getString("result");
+                            String name = response.getString("response");
+                            if (Objects.equals(result, "Ok")) {
+                                LoggedInUser user =
+                                        new LoggedInUser(java.util.UUID.randomUUID().toString(), name);
+                                User.setLogin(getApplicationContext(), name);
+                                updateUiWithUser(new LoggedInUserView(name));
+                            } else {
+                                showLoginFailed(R.string.login_failed);
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Toast.makeText(context, "Fail to get response = " + error, Toast.LENGTH_SHORT).show();
+            }
+        });
+        queue.add(jsonObjectRequest);
     }
 }
