@@ -1,7 +1,11 @@
 package com.example.tindercut;
 
+import android.net.Uri;
 import android.os.Bundle;
+import android.text.method.KeyListener;
 import android.util.Log;
+import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -15,9 +19,10 @@ public class HairdresserActivity extends AppCompatActivity {
     String iconUrl;
     String name;
 
-    TextView hairdresserName, hairdresserDescription;
+    EditText hairdresserName;
+    TextView hairdresserDescription;
 
-    ImageView hairdresserIcon;
+    ImageView hairdresserIcon, hairdresserEdit;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,9 +30,10 @@ public class HairdresserActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_hairdresser);
 
-        hairdresserName = findViewById(R.id.hairdresserName);
+        hairdresserName = (EditText) findViewById(R.id.hairdresserName);
         hairdresserDescription = findViewById(R.id.hairdresserDescription);
         hairdresserIcon = findViewById(R.id.hairdresserPhoto);
+        hairdresserEdit = findViewById(R.id.editProfileIcon);
 
         Bundle extras = getIntent().getExtras();
         if (extras != null){
@@ -38,23 +44,36 @@ public class HairdresserActivity extends AppCompatActivity {
             Log.v("DEV", iconUrl);
 
             hairdresserName.setText(name);
+            hairdresserName.setTag(hairdresserName.getKeyListener());
+            hairdresserName.setKeyListener(null);
+
             hairdresserDescription.setText("Some description here...");
             Glide.with(this).load(iconUrl).into(hairdresserIcon);
         }
 
+        hairdresserEdit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                toggleText(hairdresserName);
+            }
+        });
+
         Log.v("DEV", "Activity created");
     }
 
-    private void lockText(EditText text){
-        text.setFocusable(false);
-        text.setLongClickable(false);
-        text.setCursorVisible(false);
-    }
 
-    private void unlockText(EditText text){
-        text.setFocusable(true);
-        text.setLongClickable(true);
-        text.setCursorVisible(true);
+    private void toggleText(EditText text){
+        if (text.getKeyListener() != null){
+            text.setTag(text.getKeyListener());
+            text.setKeyListener(null);
+            text.clearFocus();
+            hairdresserEdit.setImageResource(android.R.drawable.ic_menu_edit);
+        } else {
+            text.setKeyListener((KeyListener) text.getTag());
+            text.requestFocus();
+            text.setSelection(text.getText().length());
+            hairdresserEdit.setImageResource(android.R.drawable.ic_menu_save);
+        }
     }
 
 }
