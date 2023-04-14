@@ -24,4 +24,8 @@
     <string name="verification_error">Passwords do not match</string>
     <string name="action_google_sign_in">Sign In With Google</string>
     <string name="failedGAuth">Google Authentication Failed</string>
+    <string name="title_activity_main2">MainActivity</string>
+    <string name="title_home">Home</string>
+    <string name="title_dashboard">Dashboard</string>
+    <string name="title_notifications">Notifications</string>
 </resources>
