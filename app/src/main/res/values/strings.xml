@@ -22,4 +22,8 @@
     <string name="prompt_company">Компания</string>
     <string name="prompt_password_verification">Подтвердите пароль</string>
     <string name="verification_error">Passwords do not match</string>
+    <string name="title_home">Главная</string>
+    <string name="title_searchphoto">Поиск по фото</string>
+    <string name="title_profile">Профиль</string>
+
 </resources>
