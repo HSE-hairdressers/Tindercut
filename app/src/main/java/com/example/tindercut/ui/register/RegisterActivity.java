@@ -1,18 +1,9 @@
 package com.example.tindercut.ui.register;
 
 import android.app.Activity;
-
-import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProvider;
-
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-
-import androidx.annotation.Nullable;
-import androidx.annotation.StringRes;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.KeyEvent;
@@ -24,6 +15,12 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.Nullable;
+import androidx.annotation.StringRes;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
+
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -34,7 +31,6 @@ import com.example.tindercut.MainActivity;
 import com.example.tindercut.R;
 import com.example.tindercut.data.model.LoggedInUser;
 import com.example.tindercut.databinding.ActivityRegisterBinding;
-import com.example.tindercut.ui.login.LoggedInUserView;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -209,6 +205,9 @@ public class RegisterActivity extends AppCompatActivity {
                                 LoggedInUser user =
                                         new LoggedInUser(java.util.UUID.randomUUID().toString(), name);
                                 updateUiWithUser(new RegisteredInUserView(name));
+                                setResult(Activity.RESULT_OK);
+                                //Complete and destroy login activity once successful
+                                finish();
                             } else {
                                 showRegisterFailed(R.string.login_failed);
                             }

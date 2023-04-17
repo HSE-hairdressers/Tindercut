@@ -256,6 +256,9 @@ public class LoginActivity extends AppCompatActivity {
                                         new LoggedInUser(java.util.UUID.randomUUID().toString(), name);
                                 User.setLogin(getApplicationContext(), name);
                                 updateUiWithUser(new LoggedInUserView(name));
+                                setResult(Activity.RESULT_OK);
+                                //Complete and destroy login activity once successful
+                                finish();
                             } else {
                                 showLoginFailed(R.string.login_failed);
                             }
