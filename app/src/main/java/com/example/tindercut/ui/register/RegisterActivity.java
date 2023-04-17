@@ -5,7 +5,6 @@ import android.app.Activity;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 
@@ -24,24 +23,11 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.error.VolleyError;
-import com.android.volley.request.JsonObjectRequest;
-import com.android.volley.toolbox.Volley;
 import com.example.tindercut.MainActivity;
 import com.example.tindercut.R;
-import com.example.tindercut.data.model.LoggedInUser;
 import com.example.tindercut.databinding.ActivityRegisterBinding;
-import com.example.tindercut.ui.login.LoggedInUserView;
-
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
 
 public class RegisterActivity extends AppCompatActivity {
 
@@ -168,8 +154,7 @@ public class RegisterActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 loadingProgressBar.setVisibility(View.VISIBLE);
-//                registerViewModel.register(registrationInfo, getApplicationContext());
-                checkRegisterInfo(registrationInfo, getApplicationContext());
+                registerViewModel.register(registrationInfo, getApplicationContext());
             }
         });
     }
@@ -188,40 +173,5 @@ public class RegisterActivity extends AppCompatActivity {
 
     private void showRegisterFailed(@StringRes Integer errorString) {
         Toast.makeText(getApplicationContext(), errorString, Toast.LENGTH_SHORT).show();
-    }
-
-    private void checkRegisterInfo(HashMap<String, String> info, Context context) {
-        // url to post our data
-        String url = "http://79.137.206.63:8011/auth/registration";
-        // creating a new variable for our request queue
-        RequestQueue queue = Volley.newRequestQueue(context);
-        ((Map<String, String>) info).remove(((Map<String, String>) info).get("verification"));
-        JSONObject object = new JSONObject(info);
-
-        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, url, object,
-                new Response.Listener<JSONObject>() {
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        try {
-                            String result = response.getString("result");
-                            String name = response.getString("response");
-                            if (Objects.equals(result, "Ok")) {
-                                LoggedInUser user =
-                                        new LoggedInUser(java.util.UUID.randomUUID().toString(), name);
-                                updateUiWithUser(new RegisteredInUserView(name));
-                            } else {
-                                showRegisterFailed(R.string.login_failed);
-                            }
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Toast.makeText(context, "Fail to get response = " + error, Toast.LENGTH_SHORT).show();
-            }
-        });
-        queue.add(jsonObjectRequest);
     }
 }

@@ -1,11 +1,13 @@
 package com.example.tindercut.data;
 
 import android.content.Context;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
+import com.android.volley.VolleyLog;
 import com.android.volley.error.AuthFailureError;
 import com.android.volley.error.VolleyError;
 import com.android.volley.request.JsonObjectRequest;
@@ -28,7 +30,7 @@ public class LoginDataSource {
         try {
             // TODO: handle loggedInUser authentication
             checkLoginInfo(username, password, context);
-            if (Objects.equals(result, "Ok")) {
+            if (result.equals("Ok")) {
                 LoggedInUser user =
                         new LoggedInUser(java.util.UUID.randomUUID().toString(), name);
                 return new Result.Success<>(user);
@@ -41,6 +43,7 @@ public class LoginDataSource {
     }
 
     private void checkLoginInfo(String username, String password, Context context) {
+        VolleyLog.DEBUG = true;
         // url to post our data
         String url = "http://79.137.206.63:8011/auth/login";
         // creating a new variable for our request queue
@@ -60,6 +63,8 @@ public class LoginDataSource {
                         try {
                             result = response.getString("result");
                             name = response.getString("response");
+                            Log.v("Volley", result);
+                            Log.v("Volley", name);
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -67,6 +72,7 @@ public class LoginDataSource {
                 }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
+                Log.v("DEV", error.toString());
                 Toast.makeText(context, "Fail to get response = " + error, Toast.LENGTH_SHORT).show();
             }
         });
@@ -76,4 +82,6 @@ public class LoginDataSource {
     public void logout() {
         // TODO: revoke authentication
     }
+
+
 }
