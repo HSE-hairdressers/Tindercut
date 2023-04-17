@@ -4,65 +4,51 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:layout_margin="10dp"
+    android:layout_margin="1dp"
     tools:context=".ScrollingActivity">
 
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="20dp"
-        android:hapticFeedbackEnabled="false"
-        app:cardCornerRadius="15dp">
+        android:hapticFeedbackEnabled="false">
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginTop="5dp">
+            android:layout_height="match_parent">
+
+            <ImageView
+                android:id="@+id/hairdresserIcon"
+                android:layout_width="40dp"
+                android:layout_height="30dp"
+                android:layout_above="@id/horizontalRecycler"
+                android:layout_marginBottom="4dp"
+                tools:srcCompat="@tools:sample/avatars"
+                android:clickable="true"
+                android:focusable="true"/>
 
             <TextView
                 android:id="@+id/textLoaded"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignBaseline="@id/cardicon"
-                android:layout_centerInParent="false"
-                android:layout_marginLeft="10dp"
-                android:layout_toRightOf="@id/cardicon"
-                android:paddingTop="2dp"
+                android:layout_marginStart="40dp"
+                android:layout_marginLeft="40dp"
+                android:paddingTop="10dp"
                 android:shadowColor="@color/peachpuff"
                 android:text="Hairdresser"
                 android:textColor="@color/red_peach"
                 android:textSize="24sp"
-                android:textStyle="normal"
+                android:textStyle="bold"
                 app:layout_constraintBottom_toTopOf="@+id/horizontalRecycler"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.498"
                 app:layout_constraintStart_toStartOf="parent" />
 
-            <androidx.cardview.widget.CardView
-                android:id="@+id/cardicon"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="2dp"
-                app:cardCornerRadius="90dp">
-
-                <ImageView
-                    android:id="@+id/hairdresserIcon"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    android:clickable="true"
-                    android:focusable="true"
-                    android:scaleType="fitXY"
-                    tools:srcCompat="@tools:sample/avatars" />
-            </androidx.cardview.widget.CardView>
-
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/horizontalRecycler"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_below="@id/cardicon"
-                android:layout_marginTop="10dp">
-
-            </androidx.recyclerview.widget.RecyclerView>
+                android:layout_below="@id/textLoaded" />
 
         </RelativeLayout>
 
