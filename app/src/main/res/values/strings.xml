@@ -24,4 +24,7 @@
     <string name="verification_error">Passwords do not match</string>
     <string name="action_google_sign_in">Sign In With Google</string>
     <string name="failedGAuth">Google Authentication Failed</string>
+    <string name="title_home">Главная</string>
+    <string name="title_searchphoto">Поиск по фото</string>
+    <string name="title_profile">Профиль</string>
 </resources>
