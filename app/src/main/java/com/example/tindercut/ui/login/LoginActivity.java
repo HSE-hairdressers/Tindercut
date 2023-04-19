@@ -62,11 +62,11 @@ public class LoginActivity extends AppCompatActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        if (User.isLogin(getApplicationContext())) {
-            updateUiWithUser(new LoggedInUserView(User.getName(getApplicationContext())));
-            openMainActivity();
-            finish();
-        }
+//        if (User.isLogin(getApplicationContext())) {
+//            updateUiWithUser(new LoggedInUserView(User.getName(getApplicationContext())));
+//            openMainActivity();
+//            finish();
+//        }
 
         com.example.tindercut.databinding.ActivityLoginBinding binding = ActivityLoginBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
@@ -85,7 +85,7 @@ public class LoginActivity extends AppCompatActivity {
 
         gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestEmail().build();
         gsc = GoogleSignIn.getClient(this, gso);
-//        checkGoogleAuth();
+        checkGoogleAuth();
         loginViewModel.getLoginFormState().observe(this, new Observer<LoginFormState>() {
             @Override
             public void onChanged(@Nullable LoginFormState loginFormState) {
