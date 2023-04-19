@@ -29,6 +29,7 @@ import com.android.volley.request.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.tindercut.MainActivity;
 import com.example.tindercut.R;
+import com.example.tindercut.data.Constants;
 import com.example.tindercut.data.model.LoggedInUser;
 import com.example.tindercut.databinding.ActivityRegisterBinding;
 
@@ -37,7 +38,6 @@ import org.json.JSONObject;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
 
 public class RegisterActivity extends AppCompatActivity {
 
@@ -51,8 +51,7 @@ public class RegisterActivity extends AppCompatActivity {
         binding = ActivityRegisterBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        registerViewModel = new ViewModelProvider(this, new RegisterViewModelFactory())
-                .get(RegisterViewModel.class);
+        registerViewModel = new ViewModelProvider(this, new RegisterViewModelFactory()).get(RegisterViewModel.class);
 
         HashMap<String, String> registrationInfo = new HashMap<>();
         final EditText usernameEditText = binding.username;
@@ -129,12 +128,12 @@ public class RegisterActivity extends AppCompatActivity {
 
             @Override
             public void afterTextChanged(Editable s) {
-                registrationInfo.put("username",     usernameEditText.getText().toString());
-                registrationInfo.put("name",         nameEditText.getText().toString());
-                registrationInfo.put("phone",        phoneEditText.getText().toString());
-                registrationInfo.put("address",      addressEditText.getText().toString());
-                registrationInfo.put("company",      companyEditText.getText().toString());
-                registrationInfo.put("password",     passwordEditText.getText().toString());
+                registrationInfo.put("username", usernameEditText.getText().toString());
+                registrationInfo.put("name", nameEditText.getText().toString());
+                registrationInfo.put("phone", phoneEditText.getText().toString());
+                registrationInfo.put("address", addressEditText.getText().toString());
+                registrationInfo.put("company", companyEditText.getText().toString());
+                registrationInfo.put("password", passwordEditText.getText().toString());
                 registrationInfo.put("verification", verificationEditText.getText().toString());
 
 
@@ -164,7 +163,6 @@ public class RegisterActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 loadingProgressBar.setVisibility(View.VISIBLE);
-//                registerViewModel.register(registrationInfo, getApplicationContext());
                 checkRegisterInfo(registrationInfo, getApplicationContext());
             }
         });
@@ -177,7 +175,6 @@ public class RegisterActivity extends AppCompatActivity {
 
     private void updateUiWithUser(RegisteredInUserView model) {
         String welcome = getString(R.string.welcome) + model.getDisplayName();
-        // TODO : initiate successful logged in experience
         Toast.makeText(getApplicationContext(), welcome, Toast.LENGTH_LONG).show();
         openMainActivity();
     }
@@ -188,34 +185,32 @@ public class RegisterActivity extends AppCompatActivity {
 
     private void checkRegisterInfo(HashMap<String, String> info, Context context) {
         // url to post our data
-        String url = "http://79.137.206.63:8011/auth/registration";
+        String url = Constants.getRegistrationURL();
         // creating a new variable for our request queue
         RequestQueue queue = Volley.newRequestQueue(context);
         ((Map<String, String>) info).remove(((Map<String, String>) info).get("verification"));
         JSONObject object = new JSONObject(info);
 
-        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, url, object,
-                new Response.Listener<JSONObject>() {
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        try {
-                            String result = response.getString("result");
-                            String name = response.getString("response");
-                            if (Objects.equals(result, "Ok")) {
-                                LoggedInUser user =
-                                        new LoggedInUser(java.util.UUID.randomUUID().toString(), name);
-                                updateUiWithUser(new RegisteredInUserView(name));
-                                setResult(Activity.RESULT_OK);
-                                //Complete and destroy login activity once successful
-                                finish();
-                            } else {
-                                showRegisterFailed(R.string.login_failed);
-                            }
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, url, object, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                try {
+                    String result = response.getString("result");
+                    String name = response.getString("response");
+                    if (result.equals("Ok")) {
+                        LoggedInUser user = new LoggedInUser(java.util.UUID.randomUUID().toString(), name);
+                        updateUiWithUser(new RegisteredInUserView(name));
+                        setResult(Activity.RESULT_OK);
+                        //Complete and destroy login activity once successful
+                        finish();
+                    } else {
+                        showRegisterFailed(R.string.login_failed);
                     }
-                }, new Response.ErrorListener() {
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
                 Toast.makeText(context, "Fail to get response = " + error, Toast.LENGTH_SHORT).show();

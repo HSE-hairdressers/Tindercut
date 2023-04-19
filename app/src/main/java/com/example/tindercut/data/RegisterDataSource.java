@@ -18,7 +18,6 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
 
 /**
  * Class that handles authentication w/ login credentials and retrieves user information.
@@ -26,11 +25,12 @@ import java.util.Objects;
 public class RegisterDataSource {
     private String name;
     private String result;
+
     public Result<LoggedInUser> register(HashMap<String, String> info, Context context) {
         try {
             // TODO: handle loggedInUser authentication
             checkRegisterInfo(info, context);
-            if (Objects.equals(result, "Ok")) {
+            if (result.equals("Ok")) {
                 LoggedInUser user = new LoggedInUser(java.util.UUID.randomUUID().toString(), info.get("name"));
                 return new Result.Success<>(user);
             } else {
@@ -43,7 +43,7 @@ public class RegisterDataSource {
 
     private void checkRegisterInfo(HashMap<String, String> info, Context context) {
         // url to post our data
-        String url = "http://79.137.206.63:8011/auth/registration";
+        String url = Constants.getRegistrationURL();
         // creating a new variable for our request queue
         RequestQueue queue = Volley.newRequestQueue(context);
         ((Map<String, String>) info).remove(((Map<String, String>) info).get("verification"));

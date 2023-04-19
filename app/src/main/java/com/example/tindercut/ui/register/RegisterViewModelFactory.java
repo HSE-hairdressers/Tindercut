@@ -1,8 +1,8 @@
 package com.example.tindercut.ui.register;
 
+import androidx.annotation.NonNull;
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.annotation.NonNull;
 
 import com.example.tindercut.data.RegisterDataSource;
 import com.example.tindercut.data.RegisterRepository;

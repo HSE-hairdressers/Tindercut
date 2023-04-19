@@ -16,7 +16,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
-import java.util.Objects;
 
 /**
  * Class that handles authentication w/ login credentials and retrieves user information.
@@ -24,11 +23,11 @@ import java.util.Objects;
 public class LoginDataSource {
     private String name;
     private String result;
+
     public Result<LoggedInUser> login(String username, String password, Context context) {
         try {
-            // TODO: handle loggedInUser authentication
             checkLoginInfo(username, password, context);
-            if (Objects.equals(result, "Ok")) {
+            if (result.equals("Ok")) {
                 LoggedInUser user =
                         new LoggedInUser(java.util.UUID.randomUUID().toString(), name);
                 return new Result.Success<>(user);
@@ -42,7 +41,7 @@ public class LoginDataSource {
 
     private void checkLoginInfo(String username, String password, Context context) {
         // url to post our data
-        String url = "http://79.137.206.63:8011/auth/login";
+        String url = Constants.getLoginURL();
         // creating a new variable for our request queue
         RequestQueue queue = Volley.newRequestQueue(context);
         JSONObject object = new JSONObject();

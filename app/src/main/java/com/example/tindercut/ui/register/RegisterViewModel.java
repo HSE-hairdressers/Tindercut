@@ -1,24 +1,23 @@
 package com.example.tindercut.ui.register;
 
+import android.content.Context;
+import android.util.Patterns;
+
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import android.content.Context;
-import android.util.Patterns;
-
-import com.example.tindercut.data.RegisterRepository;
+import com.example.tindercut.R;
 import com.example.tindercut.data.RegisterRepository;
 import com.example.tindercut.data.Result;
 import com.example.tindercut.data.model.LoggedInUser;
-import com.example.tindercut.R;
 
 import java.util.HashMap;
 
 public class RegisterViewModel extends ViewModel {
-    private MutableLiveData<RegisterFormState> registerFormState = new MutableLiveData<>();
-    private MutableLiveData<RegisterResult> registerResult = new MutableLiveData<>();
-    private RegisterRepository registerRepository;
+    private final MutableLiveData<RegisterFormState> registerFormState = new MutableLiveData<>();
+    private final MutableLiveData<RegisterResult> registerResult = new MutableLiveData<>();
+    private final RegisterRepository registerRepository;
 
     RegisterViewModel(RegisterRepository registerRepository) {
         this.registerRepository = registerRepository;
@@ -46,14 +45,11 @@ public class RegisterViewModel extends ViewModel {
 
     public void registerDataChanged(HashMap<String, String> info) {
         if (!isUserNameValid(info.get("username"))) {
-            registerFormState.setValue(new RegisterFormState(R.string.invalid_username, null, null,
-                    null, null, null, null));
+            registerFormState.setValue(new RegisterFormState(R.string.invalid_username, null, null, null, null, null, null));
         } else if (!isPasswordValid(info.get("password"))) {
-            registerFormState.setValue(new RegisterFormState(null, R.string.invalid_password,
-                    null, null, null, null, null));
+            registerFormState.setValue(new RegisterFormState(null, R.string.invalid_password, null, null, null, null, null));
         } else if (!isVerificationCorrect(info.get("password"), info.get("verification"))) {
-            registerFormState.setValue(new RegisterFormState(null, null,
-                    null, null, null, null, R.string.verification_error));
+            registerFormState.setValue(new RegisterFormState(null, null, null, null, null, null, R.string.verification_error));
         } else {
             registerFormState.setValue(new RegisterFormState(true));
         }
