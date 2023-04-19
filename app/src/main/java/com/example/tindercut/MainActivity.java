@@ -6,14 +6,10 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
-
 import android.Manifest;
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.database.Cursor;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -28,12 +24,15 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.error.VolleyError;
 import com.android.volley.request.SimpleMultiPartRequest;
-import com.android.volley.request.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
@@ -44,27 +43,19 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.Serializable;
-import java.net.URL;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
-import java.util.HashMap;
-import java.util.Map;
 
 public class MainActivity extends AppCompatActivity implements PickiTCallbacks {
 
+    private final int picked_image = 1;
+    PickiT pickIt;
     private Bitmap ImageBitmap;
     private Button button;
     private Button button2;
     private ImageView ImageView;
-    private final int picked_image = 1;
-    PickiT pickIt;
     private String imagePath;
 
     private BottomNavigationView bottomNavigationView;
@@ -132,7 +123,7 @@ public class MainActivity extends AppCompatActivity implements PickiTCallbacks {
         switch (requestCode) {
             case picked_image:
                 //Получаем URI картинки:
-                if (data == null){
+                if (data == null) {
                     return;
                 }
                 Uri imageUri = data.getData();
@@ -180,7 +171,7 @@ public class MainActivity extends AppCompatActivity implements PickiTCallbacks {
 
                                 Intent scrollingIntent = new Intent(MainActivity.this, ScrollingActivity.class);
                                 ArrayList<DataSerializable> arrayToSend = new ArrayList<>();
-                                for(int i = 0; i < hairData.length(); i++){
+                                for (int i = 0; i < hairData.length(); i++) {
                                     arrayToSend.add(new DataSerializable(hairData.get(i).toString()));
                                 }
 
@@ -189,7 +180,7 @@ public class MainActivity extends AppCompatActivity implements PickiTCallbacks {
                                 scrollingIntent.putExtras(bundle);
                                 try {
                                     startActivity(scrollingIntent);
-                                } catch (Exception e){
+                                } catch (Exception e) {
                                     e.getStackTrace();
                                 }
 
@@ -208,7 +199,7 @@ public class MainActivity extends AppCompatActivity implements PickiTCallbacks {
                 Toast.makeText(getApplicationContext(), error.getLocalizedMessage(), Toast.LENGTH_LONG).show();
             }
         });
-        String fileName = Calendar.getInstance().getTime().toString() + " Photo";
+        String fileName = Calendar.getInstance().getTime() + " Photo";
         //System.out.println("Путь: "+ imageUri.getPath());
         uploadRequest.addFile(fileName, imagePath);
         //uploadRequest.addMultipartParam("body", "text/plain", base64Image);

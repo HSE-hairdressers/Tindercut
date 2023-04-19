@@ -13,7 +13,7 @@ public class User {
     }
 
     public static void setLogin(Context c, String name) {
-        Session.setUserName(c,  name);
+        Session.setUserName(c, name);
     }
 
     public static void logout(Context c) {

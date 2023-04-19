@@ -29,6 +29,7 @@ import com.android.volley.request.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.tindercut.MainActivity;
 import com.example.tindercut.R;
+import com.example.tindercut.data.Constants;
 import com.example.tindercut.data.User;
 import com.example.tindercut.data.model.LoggedInUser;
 import com.example.tindercut.databinding.ActivityLoginBinding;
@@ -44,8 +45,6 @@ import com.google.android.gms.tasks.Task;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.Objects;
-
 public class LoginActivity extends AppCompatActivity {
     private final static String G_PLUS_SCOPE =
             "oauth2:https://www.googleapis.com/auth/plus.me";
@@ -55,10 +54,9 @@ public class LoginActivity extends AppCompatActivity {
             "https://www.googleapis.com/auth/userinfo.email";
     private final static String SCOPES = G_PLUS_SCOPE + " " + USERINFO_SCOPE + " " + EMAIL_SCOPE;
     private static final int RC_SIGN_IN = 420;
-    private LoginViewModel loginViewModel;
-
     GoogleSignInOptions gso;
     GoogleSignInClient gsc;
+    private LoginViewModel loginViewModel;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -158,8 +156,6 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 loadingProgressBar.setVisibility(View.VISIBLE);
-//                loginViewModel.login(usernameEditText.getText().toString(),
-//                        passwordEditText.getText().toString(), getApplicationContext());
                 checkLoginInfo(usernameEditText.getText().toString(),
                         passwordEditText.getText().toString(), getApplicationContext());
             }
@@ -202,7 +198,6 @@ public class LoginActivity extends AppCompatActivity {
     private void checkGoogleAuth() {
         GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(this);
         if (account != null) {
-//            System.out.println(account.getEmail());
             updateUiWithUser(new LoggedInUserView(account.getDisplayName()));
             setResult(Activity.RESULT_OK);
             //Complete and destroy login activity once successful
@@ -222,7 +217,6 @@ public class LoginActivity extends AppCompatActivity {
 
     public void updateUiWithUser(LoggedInUserView model) {
         String welcome = getString(R.string.welcome) + model.getDisplayName();
-        // TODO : initiate successful logged in experience
         Toast.makeText(getApplicationContext(), welcome, Toast.LENGTH_LONG).show();
         openMainActivity();
     }
@@ -233,7 +227,7 @@ public class LoginActivity extends AppCompatActivity {
 
     private void checkLoginInfo(String username, String password, Context context) {
         // url to post our data
-        String url = "http://79.137.206.63:8011/auth/login";
+        String url = Constants.getLoginURL();
         // creating a new variable for our request queue
         RequestQueue queue = Volley.newRequestQueue(context);
         JSONObject object = new JSONObject();
@@ -251,11 +245,14 @@ public class LoginActivity extends AppCompatActivity {
                         try {
                             String result = response.getString("result");
                             String name = response.getString("response");
-                            if (Objects.equals(result, "Ok")) {
+                            if (result.equals("Ok")) {
                                 LoggedInUser user =
                                         new LoggedInUser(java.util.UUID.randomUUID().toString(), name);
                                 User.setLogin(getApplicationContext(), name);
                                 updateUiWithUser(new LoggedInUserView(name));
+                                setResult(Activity.RESULT_OK);
+                                //Complete and destroy login activity once successful
+                                finish();
                             } else {
                                 showLoginFailed(R.string.login_failed);
                             }

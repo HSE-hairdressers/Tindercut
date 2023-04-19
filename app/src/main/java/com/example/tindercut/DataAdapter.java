@@ -2,7 +2,6 @@ package com.example.tindercut;
 
 import android.content.Context;
 import android.content.Intent;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,8 +12,6 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
-import com.bumptech.glide.Glide;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -27,9 +24,9 @@ public class DataAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private final ArrayList<ArrayList<String>> Images;
     private final ArrayList<String> hairdressers;
 
+    private final Context context;
     private final HashMap<String, ArrayList<String>> extras;
 
-    private Context context;
 
     public DataAdapter(Context context, ArrayList<ArrayList<String>> images, ArrayList<String> hairdressers, HashMap<String, ArrayList<String>> extras) {
         this.context = context;
@@ -43,11 +40,10 @@ public class DataAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        if (viewType == VIEW_TYPE_ITEM){
+        if (viewType == VIEW_TYPE_ITEM) {
             View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.loaded_hairdresser, parent, false);
             return new ItemViewHolder(view);
-        }
-        else {
+        } else {
             View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.loading_item, parent, false);
             return new LoadingViewHolder(view);
         }
@@ -55,7 +51,7 @@ public class DataAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
-        if (holder instanceof ItemViewHolder){
+        if (holder instanceof ItemViewHolder) {
 
             String url = extras.get(hairdressers.get(position)).get(0);
 
@@ -65,9 +61,8 @@ public class DataAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
             horizontalView(((ItemViewHolder) holder), position);
 
-        }
-        else {
-            showLoadingView((LoadingViewHolder)holder, position);
+        } else {
+            showLoadingView((LoadingViewHolder) holder, position);
         }
 
     }
@@ -83,12 +78,24 @@ public class DataAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         return hairdressers == null ? 0 : hairdressers.size();
     }
 
-    private class ItemViewHolder extends RecyclerView.ViewHolder{
+    private void horizontalView(ItemViewHolder holder, int position) {
+        HorizontalDataAdapter adapter = new HorizontalDataAdapter(Images.get(position));
+        holder.recyclerView.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false));
+        holder.recyclerView.setAdapter(adapter);
+    }
+
+    private void showLoadingView(LoadingViewHolder viewHolder, int position) {
+        //ProgressBar would be displayed
+
+    }
+
+    private class ItemViewHolder extends RecyclerView.ViewHolder {
 
         ImageView hairdresserIcon;
         RecyclerView recyclerView;
         TextView textView;
-        public ItemViewHolder(View view){
+
+        public ItemViewHolder(View view) {
             super(view);
             textView = view.findViewById(R.id.textLoaded);
             recyclerView = view.findViewById(R.id.horizontalRecycler);
@@ -126,18 +133,6 @@ public class DataAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             recyclerView = (RecyclerView) itemView.findViewById(R.id.horizontalRecycler);
         }
     }
-
-    private void horizontalView(ItemViewHolder holder, int position) {
-        HorizontalDataAdapter adapter = new HorizontalDataAdapter(Images.get(position));
-        holder.recyclerView.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false));
-        holder.recyclerView.setAdapter(adapter);
-    }
-
-    private void showLoadingView(LoadingViewHolder viewHolder, int position) {
-        //ProgressBar would be displayed
-
-    }
-
 
 
 }
