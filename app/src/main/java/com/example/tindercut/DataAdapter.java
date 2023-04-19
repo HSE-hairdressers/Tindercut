@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class DataAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private final int VIEW_TYPE_ITEM = 0;
@@ -24,12 +25,15 @@ public class DataAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private final ArrayList<String> hairdressers;
 
     private final Context context;
+    private final HashMap<String, ArrayList<String>> extras;
 
-    public DataAdapter(Context context, ArrayList<ArrayList<String>> images, ArrayList<String> hairdressers) {
+
+    public DataAdapter(Context context, ArrayList<ArrayList<String>> images, ArrayList<String> hairdressers, HashMap<String, ArrayList<String>> extras) {
         this.context = context;
         this.inflater = LayoutInflater.from(context);
         this.Images = images;
         this.hairdressers = hairdressers;
+        this.extras = extras;
     }
 
 
@@ -49,8 +53,11 @@ public class DataAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         if (holder instanceof ItemViewHolder) {
 
+            String url = extras.get(hairdressers.get(position)).get(0);
+
             //System.out.println(((ItemViewHolder) holder).imageView.toString());
             ((ItemViewHolder) holder).textView.setText(hairdressers.get(position));
+            Glide.with(((ItemViewHolder) holder).hairdresserIcon.getContext()).load(url).into(((ItemViewHolder) holder).hairdresserIcon);
 
             horizontalView(((ItemViewHolder) holder), position);
 
@@ -83,7 +90,6 @@ public class DataAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     }
 
     private class ItemViewHolder extends RecyclerView.ViewHolder {
-        ImageView imageView;
 
         ImageView hairdresserIcon;
         RecyclerView recyclerView;
@@ -100,6 +106,8 @@ public class DataAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 public void onClick(View v) {
                     Intent hairdresserProfile = new Intent(context, HairdresserActivity.class);
                     hairdresserProfile.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    hairdresserProfile.putExtra("name", hairdressers.get(getAdapterPosition()));
+                    hairdresserProfile.putExtra("icon", extras.get(hairdressers.get(getAdapterPosition())).get(0));
                     context.startActivity(hairdresserProfile);
                 }
             });
