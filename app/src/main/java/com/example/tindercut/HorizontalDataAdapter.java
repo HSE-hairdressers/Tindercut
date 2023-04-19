@@ -1,7 +1,6 @@
 package com.example.tindercut;
 
 
-import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,12 +12,12 @@ import com.bumptech.glide.Glide;
 
 import java.util.ArrayList;
 
-public class    HorizontalDataAdapter extends RecyclerView.Adapter<HorizontalDataAdapter.ViewHolder> {
+public class HorizontalDataAdapter extends RecyclerView.Adapter<HorizontalDataAdapter.ViewHolder> {
 
     private static final String TAG = "RecyclerViewAdapter";
 
     //vars
-    private ArrayList<String> mImageUrls;
+    private final ArrayList<String> mImageUrls;
 
     public HorizontalDataAdapter(ArrayList<String> imageUrls) {
         mImageUrls = imageUrls;
@@ -44,7 +43,7 @@ public class    HorizontalDataAdapter extends RecyclerView.Adapter<HorizontalDat
         return mImageUrls == null ? 0 : mImageUrls.size();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder{
+    public class ViewHolder extends RecyclerView.ViewHolder {
 
         ImageView imageView;
 

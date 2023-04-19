@@ -1,8 +1,8 @@
 package com.example.tindercut.ui.login;
 
+import androidx.annotation.NonNull;
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.annotation.NonNull;
 
 import com.example.tindercut.data.LoginDataSource;
 import com.example.tindercut.data.LoginRepository;

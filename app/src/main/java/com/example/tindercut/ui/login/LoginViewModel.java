@@ -1,22 +1,21 @@
 package com.example.tindercut.ui.login;
 
+import android.content.Context;
+import android.util.Patterns;
+
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import android.annotation.SuppressLint;
-import android.content.Context;
-import android.util.Patterns;
-
+import com.example.tindercut.R;
 import com.example.tindercut.data.LoginRepository;
 import com.example.tindercut.data.Result;
 import com.example.tindercut.data.model.LoggedInUser;
-import com.example.tindercut.R;
 
 public class LoginViewModel extends ViewModel {
-    private MutableLiveData<LoginFormState> loginFormState = new MutableLiveData<>();
-    private MutableLiveData<LoginResult> loginResult = new MutableLiveData<>();
-    private LoginRepository loginRepository;
+    private final MutableLiveData<LoginFormState> loginFormState = new MutableLiveData<>();
+    private final MutableLiveData<LoginResult> loginResult = new MutableLiveData<>();
+    private final LoginRepository loginRepository;
 
     LoginViewModel(LoginRepository loginRepository) {
         this.loginRepository = loginRepository;

@@ -14,7 +14,7 @@ public class RegisterRepository {
 
     private static volatile RegisterRepository instance;
 
-    private RegisterDataSource dataSource;
+    private final RegisterDataSource dataSource;
 
     // If user credentials will be cached in local storage, it is recommended it be encrypted
     // @see https://developer.android.com/training/articles/keystore
