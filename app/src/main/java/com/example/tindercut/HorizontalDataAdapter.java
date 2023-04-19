@@ -51,7 +51,6 @@ public class    HorizontalDataAdapter extends RecyclerView.Adapter<HorizontalDat
         public ViewHolder(View itemView) {
             super(itemView);
             imageView = itemView.findViewById(R.id.imageLoaded2);
-
         }
     }
 }

@@ -72,7 +72,6 @@ public class ScrollingActivity extends AppCompatActivity {
         ArrayList<DataSerializable> dataArrayList = (ArrayList<DataSerializable>) bundle.getSerializable("dataArray");
         ArrayList<ArrayList<String>> imageUrlsArray = new ArrayList<>();
         ArrayList<String> hairdressers = new ArrayList<>();
-        HashMap<String, ArrayList<String>> extras = new HashMap<>();
 
 
         //Заполняем из данных
@@ -82,14 +81,8 @@ public class ScrollingActivity extends AppCompatActivity {
                 JSONArray hairImages = hairDataObject.getJSONArray("images");
                 JSONObject hairdresser = hairDataObject.getJSONObject("hairdresser");
                 String name = hairdresser.getString("name");
-                String hairdresserIcon = hairdresser.getString("pic");
 
                 hairdressers.add(name);
-
-                ArrayList<String> extrasArr = new ArrayList<>();
-                extrasArr.add(hairdresserIcon); // 1 параметр - Икнока
-
-                extras.put(name, extrasArr);
 
                 ArrayList<String> imageUrls = new ArrayList<>();
 
@@ -112,7 +105,7 @@ public class ScrollingActivity extends AppCompatActivity {
 
         //Получаем scrollView страницы
         RecyclerView recyclerView = (RecyclerView)findViewById(R.id.recyclerview);
-        DataAdapter adapter = new DataAdapter(getApplicationContext(), imageUrlsArray, hairdressers, extras);
+        DataAdapter adapter = new DataAdapter(getApplicationContext(), imageUrlsArray, hairdressers);
         recyclerView.setAdapter(adapter);
         adapter.notifyDataSetChanged();
 
