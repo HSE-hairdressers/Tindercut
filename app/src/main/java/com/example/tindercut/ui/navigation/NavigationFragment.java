@@ -13,12 +13,14 @@ import androidx.fragment.app.Fragment;
 
 import com.example.tindercut.HairdresserActivity;
 import com.example.tindercut.HomeActivity;
+import com.example.tindercut.MainActivity;
 import com.example.tindercut.R;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class NavigationFragment extends Fragment implements View.OnClickListener {
 
-    BottomNavigationView bottomNavigationView;
+    private BottomNavigationView bottomNavigationView;
+    private int item_id;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -28,6 +30,23 @@ public class NavigationFragment extends Fragment implements View.OnClickListener
 
         bottomNavigationView = view.findViewById(R.id.bottom_navigator);
         bottomNavigationView.setSelectedItemId(R.id.navigation_searchphoto);
+
+
+        bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                switch (item.getItemId()){
+                    case R.id.navigation_searchphoto:
+                        return true;
+                    case R.id.navigation_profile:
+                        return true;
+                    case R.id.navigation_home:
+                        return true;
+                }
+                return false;
+            }
+
+        });
 
         return view;
     }
