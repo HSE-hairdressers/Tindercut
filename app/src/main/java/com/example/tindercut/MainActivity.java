@@ -65,29 +65,6 @@ public class MainActivity extends AppCompatActivity implements PickiTCallbacks {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        bottomNavigationView = findViewById(R.id.bottom_navigator);
-        bottomNavigationView.setSelectedItemId(R.id.navigation_searchphoto);
-
-        bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                switch (item.getItemId()){
-                    case R.id.navigation_searchphoto:
-                        return true;
-                    case R.id.navigation_profile:
-                        startActivity(new Intent(getApplicationContext(), HairdresserActivity.class));
-                        overridePendingTransition(0, 0);
-                        return true;
-                    case R.id.navigation_home:
-                        startActivity(new Intent(getApplicationContext(), HomeActivity.class));
-                        overridePendingTransition(0, 0);
-                        return true;
-                }
-                return false;
-            }
-
-        });
-
 
         pickIt = new PickiT(this, this, this);
 

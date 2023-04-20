@@ -1,5 +1,7 @@
 package com.example.tindercut.data;
 
+import android.content.SharedPreferences;
+
 public class Hairdresser {
 
     private int id;
