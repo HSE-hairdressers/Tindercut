@@ -20,7 +20,6 @@
         android:theme="@style/Theme.Tindercut"
         android:usesCleartextTraffic="true"
         tools:targetApi="m">
-        <activity android:name=".HomeActivity"></activity>
         <activity
             android:name=".ui.register.RegisterActivity"
             android:exported="false" />
