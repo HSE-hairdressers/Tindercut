@@ -34,7 +34,7 @@ public class HairdresserActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
-        if (!User.isLogin(getApplicationContext()) && !LoggedInWithGoogleAuth()) {
+        if (!User.isLoggedIn(getApplicationContext()) && !LoggedInWithGoogleAuth()) {
             openLoginActivity();
         }
 
