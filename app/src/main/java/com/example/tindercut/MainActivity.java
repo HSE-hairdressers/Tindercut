@@ -1,11 +1,5 @@
 package com.example.tindercut;
 
-import androidx.activity.result.contract.ActivityResultContracts;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -17,13 +11,13 @@ import android.os.Environment;
 import android.provider.MediaStore;
 import android.provider.Settings;
 import android.util.Base64;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -35,7 +29,6 @@ import com.android.volley.error.VolleyError;
 import com.android.volley.request.SimpleMultiPartRequest;
 import com.android.volley.toolbox.Volley;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.google.android.material.navigation.NavigationBarView;
 import com.hbisoft.pickit.PickiT;
 import com.hbisoft.pickit.PickiTCallbacks;
 
@@ -52,10 +45,10 @@ public class MainActivity extends AppCompatActivity implements PickiTCallbacks {
 
     private final int picked_image = 1;
     PickiT pickIt;
-    private Bitmap ImageBitmap;
+    private Bitmap imageBitmap;
     private Button button;
     private Button button2;
-    private ImageView ImageView;
+    private ImageView imageView;
     private String imagePath;
 
     private BottomNavigationView bottomNavigationView;
@@ -108,7 +101,7 @@ public class MainActivity extends AppCompatActivity implements PickiTCallbacks {
         button2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (ImageBitmap != null) {
+                if (imageBitmap != null) {
                     sendImage();
                 }
             }
@@ -129,10 +122,10 @@ public class MainActivity extends AppCompatActivity implements PickiTCallbacks {
                 Uri imageUri = data.getData();
                 pickIt.getPath(imageUri, Build.VERSION.SDK_INT);
                 //Находим нужный ImageView в интерфейсе
-                ImageView = findViewById(R.id.imageView);
+                imageView = findViewById(R.id.imageView);
 
                 try {
-                    ImageBitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), imageUri);
+                    imageBitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), imageUri);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -140,11 +133,11 @@ public class MainActivity extends AppCompatActivity implements PickiTCallbacks {
                 ByteArrayOutputStream byteArrayOutputStream;
                 byteArrayOutputStream = new ByteArrayOutputStream();
 
-                if (ImageBitmap != null) {
-                    ImageBitmap.compress(Bitmap.CompressFormat.JPEG, 100, byteArrayOutputStream);
+                if (imageBitmap != null) {
+                    imageBitmap.compress(Bitmap.CompressFormat.JPEG, 100, byteArrayOutputStream);
                     byte[] bytes = byteArrayOutputStream.toByteArray();
                     final String base64Image = Base64.encodeToString(bytes, Base64.DEFAULT);
-                    ImageView.setImageBitmap(ImageBitmap);
+                    imageView.setImageBitmap(imageBitmap);
                 }
 
         }

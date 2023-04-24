@@ -9,7 +9,7 @@ public class Session {
 
     static final String USERNAME = "username";
     static final String LOGIN_STATUS = "status";
-    static final String USER_ID = "username";
+    static final String USER_ID = "user_id";
 
     static SharedPreferences getSharedPreferences(Context ctx) {
         return PreferenceManager.getDefaultSharedPreferences(ctx);
@@ -42,6 +42,6 @@ public class Session {
     }
 
     public static Long getUserID(Context ctx) {
-        return getSharedPreferences(ctx).getLong(USER_ID, -1);
+        return getSharedPreferences(ctx).getLong(USER_ID, 0);
     }
 }
