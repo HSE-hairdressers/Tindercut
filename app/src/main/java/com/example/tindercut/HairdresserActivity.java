@@ -32,12 +32,13 @@ public class HairdresserActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
-        if (!User.isLogin(getApplicationContext()) && !LoggedInWithGoogleAuth()) {
+        if (!User.isLoggedIn(getApplicationContext()) && !LoggedInWithGoogleAuth()) {
             openLoginActivity();
         }
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.fragment_hairdresser);
+        getHairdresserInfo(User.getID(getApplicationContext()), getApplicationContext());
 
         hairdresserName = (EditText) findViewById(R.id.hairdresserName);
         hairdresserDescription = findViewById(R.id.hairdresserDescription);
@@ -45,7 +46,7 @@ public class HairdresserActivity extends AppCompatActivity {
         hairdresserEdit = findViewById(R.id.editProfileIcon);
 
         Bundle extras = getIntent().getExtras();
-        if (extras != null){
+        if (extras != null) {
             name = extras.getString("name");
             iconUrl = extras.getString("icon");
 
