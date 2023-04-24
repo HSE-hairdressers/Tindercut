@@ -12,7 +12,4 @@ public class Constants {
     }
 
 
-    public static String getProfileURL() {
-        return host + "/hairdresser/info";
-    }
 }

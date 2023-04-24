@@ -8,11 +8,11 @@
 
     <EditText
         android:id="@+id/hairdresserName"
-        android:layout_width="220dp"
-        android:layout_height="64dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_marginStart="20dp"
         android:layout_marginLeft="20dp"
-        android:layout_marginTop="104dp"
+        android:layout_marginTop="120dp"
         android:background="@android:color/transparent"
         android:cursorVisible="true"
         android:ems="10"

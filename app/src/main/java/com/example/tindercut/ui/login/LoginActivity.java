@@ -244,12 +244,11 @@ public class LoginActivity extends AppCompatActivity {
                     public void onResponse(JSONObject response) {
                         try {
                             String result = response.getString("result");
-                            String name = response.getJSONObject("response").getString("name");
-                            Long id = response.getJSONObject("response").getLong("id");
+                            String name = response.getString("response");
                             if (result.equals("Ok")) {
                                 LoggedInUser user =
                                         new LoggedInUser(java.util.UUID.randomUUID().toString(), name);
-                                User.setLogin(getApplicationContext(), id, name);
+                                User.setLogin(getApplicationContext(), name);
                                 updateUiWithUser(new LoggedInUserView(name));
                                 setResult(Activity.RESULT_OK);
                                 //Complete and destroy login activity once successful

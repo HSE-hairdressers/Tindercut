@@ -54,6 +54,7 @@ public class MainActivity extends AppCompatActivity {
                         active = fragment1;
                         return true;
                     case R.id.navigation_profile:
+
                         if (!User.isLoggedIn(getApplicationContext()) && !LoggedInWithGoogleAuth()) {
                             openLoginActivity();
                         }
