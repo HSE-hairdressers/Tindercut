@@ -1,24 +1,26 @@
-package com.example.tindercut;
+package com.example.tindercut.ui.hairdresser;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.method.KeyListener;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
 
 import com.bumptech.glide.Glide;
+import com.example.tindercut.R;
 import com.example.tindercut.data.User;
 import com.example.tindercut.ui.login.LoginActivity;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
-import com.google.android.material.bottomnavigation.BottomNavigationView;
 
-public class HairdresserActivity extends AppCompatActivity {
+public class HairdresserFragment extends Fragment {
 
     String iconUrl;
     String name;
@@ -27,24 +29,20 @@ public class HairdresserActivity extends AppCompatActivity {
     TextView hairdresserDescription;
 
     ImageView hairdresserIcon, hairdresserEdit;
-    private BottomNavigationView bottomNavigationView;
+    private View view;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        view = inflater.inflate(R.layout.fragment_hairdresser,
+                container, false);
 
-        if (!User.isLogin(getApplicationContext()) && !LoggedInWithGoogleAuth()) {
-            openLoginActivity();
-        }
+        hairdresserName = (EditText) view.findViewById(R.id.hairdresserName);
+        hairdresserDescription = view.findViewById(R.id.hairdresserDescription);
+        hairdresserIcon = view.findViewById(R.id.hairdresserPhoto);
+        hairdresserEdit = view.findViewById(R.id.editProfileIcon);
 
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.fragment_hairdresser);
-
-        hairdresserName = (EditText) findViewById(R.id.hairdresserName);
-        hairdresserDescription = findViewById(R.id.hairdresserDescription);
-        hairdresserIcon = findViewById(R.id.hairdresserPhoto);
-        hairdresserEdit = findViewById(R.id.editProfileIcon);
-
-        Bundle extras = getIntent().getExtras();
+        Bundle extras = getActivity().getIntent().getExtras();
         if (extras != null){
             name = extras.getString("name");
             iconUrl = extras.getString("icon");
@@ -67,17 +65,8 @@ public class HairdresserActivity extends AppCompatActivity {
             }
         });
 
-        Log.v("DEV", "Activity created");
-    }
-
-    private void openLoginActivity() {
-        Intent intent = new Intent(this, LoginActivity.class);
-        startActivity(intent);
-        finish();
-    }
-    private Boolean LoggedInWithGoogleAuth() {
-        GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(this);
-        return account != null;
+        Log.v("DEV", "Fragment created");
+        return view;
     }
 
     private void toggleText(EditText text){
