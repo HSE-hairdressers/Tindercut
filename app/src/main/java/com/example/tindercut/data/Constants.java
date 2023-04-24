@@ -11,5 +11,7 @@ public class Constants {
         return host + "/auth/registration";
     }
 
-
+    public static String getProfileURL() {
+        return host + "/hairdresser/info";
+    }
 }
