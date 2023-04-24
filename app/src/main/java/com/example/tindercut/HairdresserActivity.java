@@ -38,7 +38,6 @@ public class HairdresserActivity extends AppCompatActivity {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.fragment_hairdresser);
-        getHairdresserInfo(User.getID(getApplicationContext()), getApplicationContext());
 
         hairdresserName = (EditText) findViewById(R.id.hairdresserName);
         hairdresserDescription = findViewById(R.id.hairdresserDescription);
