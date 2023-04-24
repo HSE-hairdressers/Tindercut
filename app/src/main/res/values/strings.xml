@@ -27,5 +27,4 @@
     <string name="title_home">Главная</string>
     <string name="title_searchphoto">Поиск по фото</string>
     <string name="title_profile">Профиль</string>
-    <string name="action_add_photo">+</string>
 </resources>
