@@ -16,34 +16,36 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.error.VolleyError;
-import com.android.volley.request.SimpleMultiPartRequest;
-import com.android.volley.toolbox.Volley;
 import com.example.tindercut.DataSerializable;
-import com.example.tindercut.MainActivity;
 import com.example.tindercut.R;
 import com.example.tindercut.ScrollingActivity;
+import com.example.tindercut.data.Constants;
+import com.example.tindercut.data.api.UploadImageApi;
+import com.example.tindercut.data.model.SearchImageData;
+import com.example.tindercut.data.model.SearchImageResponse;
 import com.hbisoft.pickit.PickiT;
 import com.hbisoft.pickit.PickiTCallbacks;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Calendar;
+
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 public class SearchPhotoFragment extends Fragment implements PickiTCallbacks {
 
@@ -127,7 +129,51 @@ public class SearchPhotoFragment extends Fragment implements PickiTCallbacks {
     }
 
     public void sendImage() {
-        RequestQueue queue = Volley.newRequestQueue(getContext());
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(Constants.host)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        UploadImageApi retrofitApi = retrofit.create(UploadImageApi.class);
+
+        File selected_image = new File(imagePath);
+        RequestBody requestFile = RequestBody.create(MediaType.parse("image/*"), selected_image);
+        MultipartBody.Part body =
+                MultipartBody.Part.createFormData("image", selected_image.getName(), requestFile);
+
+        Call<SearchImageResponse> call = retrofitApi.uploadImage(body);
+
+        call.enqueue(new Callback<SearchImageResponse>() {
+            @Override
+            public void onResponse(Call<SearchImageResponse> call, retrofit2.Response<SearchImageResponse> response) {
+
+                if (response.isSuccessful()){
+                    Toast.makeText(getContext(), "Изображение успешно загружено!", Toast.LENGTH_SHORT).show();
+                    SearchImageResponse searchImageResponse = response.body();
+                    ArrayList <SearchImageData> hairData = searchImageResponse.getSearchImageData();
+
+                    Intent scrollingIntent = new Intent(getContext(), ScrollingActivity.class);
+                    Bundle bundle = new Bundle();
+                    bundle.putSerializable("dataArray", (Serializable) hairData);
+                    scrollingIntent.putExtras(bundle);
+                    Toast.makeText(getContext(), "passed", Toast.LENGTH_SHORT).show();
+                    startActivity(scrollingIntent);
+
+                }
+                else {
+                    Toast.makeText(getContext(), "Произошла ошибка!", Toast.LENGTH_SHORT).show();
+                }
+
+            }
+
+            @Override
+            public void onFailure(Call<SearchImageResponse> call, Throwable t) {
+                Toast.makeText(getContext(), t.toString(), Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        /*RequestQueue queue = Volley.newRequestQueue(getContext());
         String url = "http://79.137.206.63:8011/img";
 
         SimpleMultiPartRequest uploadRequest = new SimpleMultiPartRequest(Request.Method.POST, url,
@@ -172,14 +218,12 @@ public class SearchPhotoFragment extends Fragment implements PickiTCallbacks {
             public void onErrorResponse(VolleyError error) {
                 Toast.makeText(getContext(), error.getLocalizedMessage(), Toast.LENGTH_LONG).show();
             }
-        });
+        });*/
+
         String fileName = Calendar.getInstance().getTime() + " Photo";
         //System.out.println("Путь: "+ imageUri.getPath());
         Log.v("DEV", imagePath);
-        uploadRequest.addFile(fileName, imagePath);
         //uploadRequest.addMultipartParam("body", "text/plain", base64Image);
-
-        queue.add(uploadRequest);
     }
 
     public void checkPermission() {

@@ -3,6 +3,7 @@ package com.example.tindercut;
 import android.graphics.Bitmap;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.ImageView;
 
 import androidx.annotation.RequiresApi;
@@ -11,6 +12,10 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.tindercut.data.model.HairdresserDetailBody;
+import com.example.tindercut.data.model.HairdresserImagesDetails;
+import com.example.tindercut.data.model.SearchImageData;
+import com.example.tindercut.data.model.SearchImageResponse;
 import com.example.tindercut.databinding.ActivityScrollingBinding;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
 
@@ -26,13 +31,12 @@ public class ScrollingActivity extends AppCompatActivity {
     private final int PAGE_SIZE = 5;
     boolean isLoading = false;
     private ActivityScrollingBinding binding;
-    private JSONArray hairData;
-    private Bitmap ImageBitmap;
     private ImageView hairdresserIcon;
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Log.v("DEV", "created");
         super.onCreate(savedInstanceState);
 
         binding = ActivityScrollingBinding.inflate(getLayoutInflater());
@@ -45,41 +49,37 @@ public class ScrollingActivity extends AppCompatActivity {
 
         //Получаем данные
         Bundle bundle = getIntent().getExtras();
-        ArrayList<DataSerializable> dataArrayList = (ArrayList<DataSerializable>) bundle.getSerializable("dataArray");
+        ArrayList<SearchImageData> dataArrayList = (ArrayList<SearchImageData>) getIntent().getSerializableExtra("dataArray");
         ArrayList<ArrayList<String>> imageUrlsArray = new ArrayList<>();
         ArrayList<String> hairdressers = new ArrayList<>();
         HashMap<String, ArrayList<String>> extras = new HashMap<>();
+        Log.v("DEV", "created");
 
 
         //Заполняем из данных
         for (int i = 0; i < dataArrayList.size(); i++) {
-            try {
-                JSONObject hairDataObject = new JSONObject(dataArrayList.get(i).getData());
-                JSONArray hairImages = hairDataObject.getJSONArray("images");
-                JSONObject hairdresser = hairDataObject.getJSONObject("hairdresser");
-                String name = hairdresser.getString("name");
-                String hairdresserIcon = hairdresser.getString("pic");
 
-                hairdressers.add(name);
+            HairdresserDetailBody hairdresser = dataArrayList.get(i).getHairdresser();
+            ArrayList<HairdresserImagesDetails> hairImages = dataArrayList.get(i).getImages();
+            String name = hairdresser.getName();
+            String hairdresserIcon = hairdresser.getPic();
 
-                ArrayList<String> extrasArr = new ArrayList<>();
-                extrasArr.add(hairdresserIcon); // 1 параметр - Икнока
+            hairdressers.add(name);
 
-                extras.put(name, extrasArr);
+            ArrayList<String> extrasArr = new ArrayList<>();
+            extrasArr.add(hairdresserIcon); // 1 параметр - Икнока
 
-                ArrayList<String> imageUrls = new ArrayList<>();
+            extras.put(name, extrasArr);
 
-                for (int j = 0; j < hairImages.length(); j++) {
-                    JSONObject hairImage = hairImages.getJSONObject(j);
-                    String imageUrl = hairImage.getString("img_path");
-                    imageUrls.add(imageUrl);
-                }
+            ArrayList<String> imageUrls = new ArrayList<>();
 
-                imageUrlsArray.add(imageUrls);
-
-            } catch (JSONException e) {
-                e.printStackTrace();
+            for (int j = 0; j < hairImages.size(); j++) {
+                HairdresserImagesDetails hairdresserImagesDetails = hairImages.get(j);
+                String imageUrl = hairdresserImagesDetails.getImg_path();
+                imageUrls.add(imageUrl);
             }
+
+            imageUrlsArray.add(imageUrls);
 
 
         }
