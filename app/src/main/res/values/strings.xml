@@ -29,4 +29,6 @@
     <string name="title_profile">Профиль</string>
     <string name="action_add_photo">+</string>
     <string name="action_submit">Submit</string>
+    <string name="action_edit_profile">Edit Profile</string>
+    <string name="action_logout">Sign Out</string>
 </resources>

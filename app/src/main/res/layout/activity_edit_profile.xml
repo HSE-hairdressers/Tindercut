@@ -84,7 +84,7 @@
         android:autofillHints="city" />
 
     <Button
-        android:id="@+id/register"
+        android:id="@+id/submitButton"
         android:layout_width="137dp"
         android:layout_height="51dp"
         android:layout_gravity="bottom"

@@ -62,7 +62,7 @@ public class RegisterActivity extends AppCompatActivity {
         final EditText passwordEditText = binding.password;
         final EditText verificationEditText = binding.passwordVerification;
 
-        final Button registerButton = findViewById(R.id.register);
+        final Button registerButton = findViewById(R.id.logoutButton);
         final ProgressBar loadingProgressBar = binding.loading;
 
         registerViewModel.getRegisterFormState().observe(this, new Observer<RegisterFormState>() {

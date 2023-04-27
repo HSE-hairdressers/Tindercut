@@ -37,6 +37,7 @@ import com.bumptech.glide.Glide;
 import com.example.tindercut.R;
 import com.example.tindercut.data.Constants;
 import com.example.tindercut.data.User;
+import com.example.tindercut.ui.settings.SettingsActivity;
 import com.hbisoft.pickit.PickiT;
 import com.hbisoft.pickit.PickiTCallbacks;
 
@@ -74,7 +75,7 @@ public class HairdresserFragment extends Fragment implements PickiTCallbacks {
         hairdresserName = (EditText) view.findViewById(R.id.hairdresserName);
         hairdresserDescription = view.findViewById(R.id.hairdresserDescription);
         hairdresserIcon = view.findViewById(R.id.hairdresserPhoto);
-        hairdresserEdit = view.findViewById(R.id.editProfileIcon);
+        hairdresserEdit = view.findViewById(R.id.settings);
         buttonUploadPhoto = view.findViewById(R.id.buttonUploadPhoto);
 
         Log.v("DEV", User.getName(getContext()));
@@ -99,7 +100,8 @@ public class HairdresserFragment extends Fragment implements PickiTCallbacks {
         hairdresserEdit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                toggleText(hairdresserName);
+//                toggleText(hairdresserName);
+                openSettingsActivity();
             }
         });
 
@@ -116,6 +118,11 @@ public class HairdresserFragment extends Fragment implements PickiTCallbacks {
 
         Log.v("DEV", "Fragment created");
         return view;
+    }
+
+    private void openSettingsActivity() {
+        Intent intent = new Intent(getContext(), SettingsActivity.class);
+        startActivity(intent);
     }
 
     private void getHairdresserInfo(Long id, Context context) {

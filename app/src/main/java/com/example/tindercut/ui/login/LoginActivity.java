@@ -32,7 +32,6 @@ import com.example.tindercut.R;
 import com.example.tindercut.data.Constants;
 import com.example.tindercut.data.User;
 import com.example.tindercut.data.model.LoggedInUser;
-import com.example.tindercut.databinding.ActivityLoginBinding;
 import com.example.tindercut.ui.register.RegisterActivity;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
@@ -50,8 +49,7 @@ public class LoginActivity extends AppCompatActivity {
             "oauth2:https://www.googleapis.com/auth/plus.me";
     private final static String USERINFO_SCOPE =
             "https://www.googleapis.com/auth/userinfo.profile";
-    private final static String EMAIL_SCOPE =
-            "https://www.googleapis.com/auth/userinfo.email";
+    private final static String EMAIL_SCOPE = "https://www.googleapis.com/auth/userinfo.email";
     private final static String SCOPES = G_PLUS_SCOPE + " " + USERINFO_SCOPE + " " + EMAIL_SCOPE;
     private static final int RC_SIGN_IN = 420;
     GoogleSignInOptions gso;
@@ -68,18 +66,16 @@ public class LoginActivity extends AppCompatActivity {
 //            finish();
 //        }
 
-        com.example.tindercut.databinding.ActivityLoginBinding binding = ActivityLoginBinding.inflate(getLayoutInflater());
-        setContentView(binding.getRoot());
+        setContentView(R.layout.activity_login);
 
-        loginViewModel = new ViewModelProvider(this, new LoginViewModelFactory())
-                .get(LoginViewModel.class);
+        loginViewModel = new ViewModelProvider(this, new LoginViewModelFactory()).get(LoginViewModel.class);
 
-        final EditText usernameEditText = binding.username;
-        final EditText passwordEditText = binding.password;
-        final Button loginButton = binding.login;
-        final Button registerButton = binding.register;
-        final ProgressBar loadingProgressBar = binding.loading;
-        final SignInButton googleSignIn = binding.googleSignIn;
+        final EditText usernameEditText = findViewById(R.id.username);
+        final EditText passwordEditText = findViewById(R.id.password);
+        final Button loginButton = findViewById(R.id.login);
+        final Button registerButton = findViewById(R.id.register);
+        final ProgressBar loadingProgressBar = findViewById(R.id.loading);
+        final SignInButton googleSignIn = findViewById(R.id.googleSignIn);
 
         registerButton.setEnabled(true);
 

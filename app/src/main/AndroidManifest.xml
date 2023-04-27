@@ -24,6 +24,12 @@
             android:name=".ui.register.RegisterActivity"
             android:exported="false" />
         <activity
+            android:name=".ui.settings.SettingsActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.editprofile.EditProfileActivity"
+            android:exported="false" />
+        <activity
             android:name=".ui.login.LoginActivity"
             android:exported="true"
             android:theme="@style/Theme.Tindercut.NoActionBar">
