@@ -6,6 +6,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
+import android.util.Xml;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
@@ -23,7 +25,6 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
-import com.android.volley.Response;
 import com.android.volley.error.VolleyError;
 import com.android.volley.request.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
@@ -31,7 +32,10 @@ import com.example.tindercut.MainActivity;
 import com.example.tindercut.R;
 import com.example.tindercut.data.Constants;
 import com.example.tindercut.data.User;
+import com.example.tindercut.data.api.CheckLoginInfoApi;
+import com.example.tindercut.data.api.CheckLoginResponse;
 import com.example.tindercut.data.model.LoggedInUser;
+import com.example.tindercut.data.model.LoginSourceBody;
 import com.example.tindercut.ui.register.RegisterActivity;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
@@ -40,9 +44,19 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.Task;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import okhttp3.OkHttpClient;
+import okhttp3.logging.HttpLoggingInterceptor;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 public class LoginActivity extends AppCompatActivity {
     private final static String G_PLUS_SCOPE =
@@ -222,47 +236,40 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void checkLoginInfo(String username, String password, Context context) {
-        // url to post our data
-        String url = Constants.getLoginURL();
-        // creating a new variable for our request queue
-        RequestQueue queue = Volley.newRequestQueue(context);
-        JSONObject object = new JSONObject();
-        try {
-            //input your API parameters
-            object.put("username", username);
-            object.put("password", password);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, url, object,
-                new Response.Listener<JSONObject>() {
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        try {
-                            String result = response.getString("result");
-                            String name = response.getJSONObject("response").getString("name");
-                            Long id = response.getJSONObject("response").getLong("id");
-                            if (result.equals("Ok")) {
-                                LoggedInUser user =
-                                        new LoggedInUser(java.util.UUID.randomUUID().toString(), name);
-                                User.setLogin(getApplicationContext(), id, name);
-                                updateUiWithUser(new LoggedInUserView(name));
-                                setResult(Activity.RESULT_OK);
-                                //Complete and destroy login activity once successful
-                                finish();
-                            } else {
-                                showLoginFailed(R.string.login_failed);
-                            }
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                }, new Response.ErrorListener() {
+
+        Retrofit retfrofit = new Retrofit.Builder()
+                .baseUrl(Constants.host)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        CheckLoginInfoApi loginApi = retfrofit.create(CheckLoginInfoApi.class);
+        LoginSourceBody loginBody = new LoginSourceBody(username, password);
+        Call<CheckLoginResponse> call = loginApi.createPost(loginBody);
+
+        call.enqueue(new Callback<CheckLoginResponse>() {
             @Override
-            public void onErrorResponse(VolleyError error) {
-                Toast.makeText(context, "Fail to get response = " + error, Toast.LENGTH_SHORT).show();
+            public void onResponse(Call<CheckLoginResponse> call, Response<CheckLoginResponse> response) {
+                if (response.isSuccessful()) {
+                    String name = response.body().getName();
+                    Long id = response.body().getId();
+                    LoggedInUser user =
+                            new LoggedInUser(java.util.UUID.randomUUID().toString(), name);
+                    User.setLogin(getApplicationContext(), id, name);
+                    updateUiWithUser(new LoggedInUserView(name));
+                    setResult(Activity.RESULT_OK);
+                    //Complete and destroy login activity once successful
+                    finish();
+
+                }
+                else{
+                    showLoginFailed(R.string.login_failed);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<CheckLoginResponse> call, Throwable t) {
+                t.printStackTrace();
             }
         });
-        queue.add(jsonObjectRequest);
     }
 }

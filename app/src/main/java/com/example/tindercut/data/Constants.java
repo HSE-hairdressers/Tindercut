@@ -3,8 +3,14 @@ package com.example.tindercut.data;
 public class Constants {
     public final static String host = "http://79.137.206.63:8011";
 
+    public final static String loginURL = "/auth/login";
+
+    public final static String registerURL = "/auth/registration";
+
+    public final static String imgUrl = "/img";
+
     public static String getLoginURL() {
-        return host + "/auth/login";
+        return host + loginURL;
     }
 
     public static String getRegistrationURL() {
