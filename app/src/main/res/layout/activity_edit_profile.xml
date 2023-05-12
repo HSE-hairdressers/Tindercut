@@ -34,6 +34,7 @@
         android:layout_width="368dp"
         android:layout_height="62dp"
         android:layout_marginTop="15dp"
+        android:autofillHints="phone"
         android:hint="@string/prompt_number"
         android:imeActionLabel="@string/action_sign_in_short"
         android:imeOptions="actionDone"
@@ -44,14 +45,14 @@
         app:layout_constraintHorizontal_bias="0.488"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/name"
-        app:layout_constraintVertical_bias="0.0"
-        android:autofillHints="phone" />
+        app:layout_constraintVertical_bias="0.0" />
 
     <EditText
         android:id="@+id/address"
         android:layout_width="368dp"
         android:layout_height="62dp"
         android:layout_marginTop="15dp"
+        android:autofillHints="city"
         android:hint="@string/prompt_address"
         android:imeActionLabel="@string/action_sign_in_short"
         android:imeOptions="actionDone"
@@ -62,14 +63,14 @@
         app:layout_constraintHorizontal_bias="0.488"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/phoneNumber"
-        app:layout_constraintVertical_bias="0.0"
-        android:autofillHints="city" />
+        app:layout_constraintVertical_bias="0.0" />
 
     <EditText
         android:id="@+id/company"
         android:layout_width="368dp"
         android:layout_height="62dp"
         android:layout_marginTop="15dp"
+        android:autofillHints="city"
         android:hint="@string/prompt_company"
         android:imeActionLabel="@string/action_sign_in_short"
         android:imeOptions="actionDone"
@@ -80,8 +81,7 @@
         app:layout_constraintHorizontal_bias="0.488"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/address"
-        app:layout_constraintVertical_bias="0.0"
-        android:autofillHints="city" />
+        app:layout_constraintVertical_bias="0.0" />
 
     <Button
         android:id="@+id/submitButton"
@@ -89,7 +89,7 @@
         android:layout_height="51dp"
         android:layout_gravity="bottom"
         android:layout_marginBottom="6dp"
-        android:enabled="false"
+        android:enabled="true"
         android:text="@string/action_submit"
         android:textColor="?android:attr/textColorPrimaryNoDisable"
         android:textStyle="bold"
@@ -98,17 +98,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.452"
         app:layout_constraintStart_toStartOf="parent" />
-
-    <ImageView
-        android:id="@+id/hairdresserPhoto"
-        android:layout_width="130dp"
-        android:layout_height="130dp"
-        android:layout_marginEnd="140dp"
-        android:layout_marginRight="140dp"
-        android:layout_marginBottom="644dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        tools:srcCompat="@tools:sample/avatars" />
 
     <ProgressBar
         android:id="@+id/loading"
@@ -123,5 +112,25 @@
         app:layout_constraintStart_toStartOf="@+id/company"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.3" />
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        app:cardCornerRadius="100dp"
+        app:layout_constraintEnd_toStartOf="@+id/phoneNumber"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+            android:id="@+id/hairdresserPhoto"
+            android:layout_width="130dp"
+            android:layout_height="130dp"
+            android:clickable="true"
+            android:focusable="true"
+            android:scaleType="centerCrop"
+            tools:srcCompat="@tools:sample/avatars" />
+    </androidx.cardview.widget.CardView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
