@@ -22,7 +22,6 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
-import com.example.tindercut.DataSerializable;
 import com.example.tindercut.R;
 import com.example.tindercut.ScrollingActivity;
 import com.example.tindercut.data.Constants;
@@ -157,7 +156,6 @@ public class SearchPhotoFragment extends Fragment implements PickiTCallbacks {
                     Bundle bundle = new Bundle();
                     bundle.putSerializable("dataArray", (Serializable) hairData);
                     scrollingIntent.putExtras(bundle);
-                    Toast.makeText(getContext(), "passed", Toast.LENGTH_SHORT).show();
                     startActivity(scrollingIntent);
 
                 }

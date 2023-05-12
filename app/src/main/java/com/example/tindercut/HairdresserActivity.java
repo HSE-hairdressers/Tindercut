@@ -12,7 +12,6 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.bumptech.glide.Glide;
-import com.example.tindercut.data.User;
 import com.example.tindercut.ui.login.LoginActivity;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
@@ -31,10 +30,6 @@ public class HairdresserActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
-        if (!User.isLoggedIn(getApplicationContext()) && !LoggedInWithGoogleAuth()) {
-            openLoginActivity();
-        }
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.fragment_hairdresser);
