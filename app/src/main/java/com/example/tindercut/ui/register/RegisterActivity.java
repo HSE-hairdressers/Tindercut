@@ -23,14 +23,19 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
-import com.android.volley.Response;
 import com.android.volley.error.VolleyError;
 import com.android.volley.request.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.tindercut.MainActivity;
 import com.example.tindercut.R;
 import com.example.tindercut.data.Constants;
+import com.example.tindercut.data.api.CheckLoginInfoApi;
+import com.example.tindercut.data.api.CheckLoginResponse;
+import com.example.tindercut.data.api.RegistrationApi;
+import com.example.tindercut.data.api.RegistrationResponse;
 import com.example.tindercut.data.model.LoggedInUser;
+import com.example.tindercut.data.model.LoginSourceBody;
+import com.example.tindercut.data.model.RegistrationSourceBody;
 import com.example.tindercut.databinding.ActivityRegisterBinding;
 
 import org.json.JSONException;
@@ -38,6 +43,16 @@ import org.json.JSONObject;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import okhttp3.OkHttpClient;
+import okhttp3.ResponseBody;
+import okhttp3.logging.HttpLoggingInterceptor;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
+import retrofit2.converter.scalars.ScalarsConverterFactory;
 
 public class RegisterActivity extends AppCompatActivity {
 
@@ -62,7 +77,7 @@ public class RegisterActivity extends AppCompatActivity {
         final EditText passwordEditText = binding.password;
         final EditText verificationEditText = binding.passwordVerification;
 
-        final Button registerButton = findViewById(R.id.logoutButton);
+        final Button registerButton = findViewById(R.id.register);
         final ProgressBar loadingProgressBar = binding.loading;
 
         registerViewModel.getRegisterFormState().observe(this, new Observer<RegisterFormState>() {
@@ -184,38 +199,44 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
     private void checkRegisterInfo(HashMap<String, String> info, Context context) {
-        // url to post our data
-        String url = Constants.getRegistrationURL();
-        // creating a new variable for our request queue
-        RequestQueue queue = Volley.newRequestQueue(context);
+        // **old** creating a new variable for our request queue
+        HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
+        interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
+        OkHttpClient client = new OkHttpClient.Builder().addInterceptor(interceptor).build();
+
         ((Map<String, String>) info).remove(((Map<String, String>) info).get("verification"));
         JSONObject object = new JSONObject(info);
 
-        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, url, object, new Response.Listener<JSONObject>() {
+        //  **new** request using retrofit
+        Retrofit retfrofit = new Retrofit.Builder()
+                .baseUrl(Constants.host)
+                .client(client)
+                .addConverterFactory(ScalarsConverterFactory.create())
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        RegistrationApi registrationApi = retfrofit.create(RegistrationApi.class);
+        Call<RegistrationResponse> call = registrationApi.createPost(object.toString());
+
+        call.enqueue(new Callback<RegistrationResponse>() {
             @Override
-            public void onResponse(JSONObject response) {
-                try {
-                    String result = response.getString("result");
-                    String name = response.getString("response");
-                    if (result.equals("Ok")) {
-                        LoggedInUser user = new LoggedInUser(java.util.UUID.randomUUID().toString(), name);
-                        updateUiWithUser(new RegisteredInUserView(name));
-                        setResult(Activity.RESULT_OK);
-                        //Complete and destroy login activity once successful
-                        finish();
-                    } else {
-                        showRegisterFailed(R.string.login_failed);
-                    }
-                } catch (JSONException e) {
-                    e.printStackTrace();
+            public void onResponse(Call<RegistrationResponse> call, Response<RegistrationResponse> response) {
+                if(response.isSuccessful()) {
+                    String name = response.body().getName();
+                    LoggedInUser user = new LoggedInUser(java.util.UUID.randomUUID().toString(), name);
+                    updateUiWithUser(new RegisteredInUserView(name));
+                    setResult(Activity.RESULT_OK);
+                    //Complete and destroy login activity once successful
+                    finish();
+                } else {
+                    showRegisterFailed(R.string.login_failed);
                 }
             }
-        }, new Response.ErrorListener() {
+
             @Override
-            public void onErrorResponse(VolleyError error) {
-                Toast.makeText(context, "Fail to get response = " + error, Toast.LENGTH_SHORT).show();
+            public void onFailure(Call<RegistrationResponse> call, Throwable t) {
+                t.printStackTrace();
             }
         });
-        queue.add(jsonObjectRequest);
     }
 }

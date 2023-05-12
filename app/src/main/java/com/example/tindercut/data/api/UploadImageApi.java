@@ -1,5 +1,6 @@
 package com.example.tindercut.data.api;
 
+import com.example.tindercut.data.Constants;
 import com.example.tindercut.data.model.SearchImageData;
 import com.example.tindercut.data.model.SearchImageResponse;
 
@@ -10,9 +11,10 @@ import retrofit2.http.POST;
 import retrofit2.http.Part;
 
 public interface UploadImageApi {
+    final String url = Constants.imgUrl;
 
     @Multipart
-    @POST("/img")
+    @POST(url)
     //UploadResponse response (@Body ImageUploadBody imageUploadBody);
     Call<SearchImageResponse> uploadImage(
             @Part MultipartBody.Part image
