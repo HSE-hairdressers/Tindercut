@@ -4,6 +4,9 @@ import com.google.gson.annotations.SerializedName;
 
 import java.util.ArrayList;
 
+/**
+ * Supporting class for parsing response on uploaded image to server
+ */
 public class SearchImageResponse {
 
     @SerializedName("data")

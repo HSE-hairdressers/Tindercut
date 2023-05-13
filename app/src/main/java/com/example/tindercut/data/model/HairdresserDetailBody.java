@@ -4,6 +4,9 @@ import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
 
+/**
+ * Supporting class for parsing hairdresser profile response
+ */
 public class HairdresserDetailBody implements Serializable {
 
     @SerializedName("name")

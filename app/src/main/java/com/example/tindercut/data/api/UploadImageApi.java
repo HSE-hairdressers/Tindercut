@@ -10,6 +10,9 @@ import retrofit2.http.Multipart;
 import retrofit2.http.POST;
 import retrofit2.http.Part;
 
+/**
+ * Api for sending image to server
+ */
 public interface UploadImageApi {
     final String url = Constants.imgUrl;
 

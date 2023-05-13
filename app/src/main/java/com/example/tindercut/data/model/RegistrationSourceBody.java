@@ -2,6 +2,9 @@ package com.example.tindercut.data.model;
 
 import org.json.JSONObject;
 
+/**
+ * Supporting class for creating registration request body
+ */
 public class RegistrationSourceBody {
 
     private JSONObject object;

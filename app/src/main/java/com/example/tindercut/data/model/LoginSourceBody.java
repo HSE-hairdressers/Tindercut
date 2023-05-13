@@ -1,5 +1,8 @@
 package com.example.tindercut.data.model;
 
+/**
+ * Supporting class for creating login request body
+ */
 public class LoginSourceBody {
 
     private String username;

@@ -7,6 +7,9 @@ import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.POST;
 
+/**
+ * Api for checking login request
+ */
 public interface CheckLoginInfoApi {
 
     String url = Constants.loginURL;

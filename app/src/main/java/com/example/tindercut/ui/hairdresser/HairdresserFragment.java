@@ -47,6 +47,9 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.util.ArrayList;
 
+/**
+ * Fragment for viewing user profile
+ */
 public class HairdresserFragment extends Fragment implements PickiTCallbacks {
 
     private final int pickedImage = 1;
@@ -64,6 +67,18 @@ public class HairdresserFragment extends Fragment implements PickiTCallbacks {
     ImageView hairdresserIcon, hairdresserEdit;
     private View view;
 
+    /**
+     *
+     * @param inflater The LayoutInflater object that can be used to inflate
+     * any views in the fragment,
+     * @param container If non-null, this is the parent view that the fragment's
+     * UI should be attached to.  The fragment should not add the view itself,
+     * but this can be used to generate the LayoutParams of the view.
+     * @param savedInstanceState If non-null, this fragment is being re-constructed
+     * from a previous saved state as given here.
+     *
+     * @return Returns View
+     */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -120,11 +135,19 @@ public class HairdresserFragment extends Fragment implements PickiTCallbacks {
         return view;
     }
 
+    /**
+     * Opens SettingActivity if needed
+     */
     private void openSettingsActivity() {
         Intent intent = new Intent(getContext(), SettingsActivity.class);
         startActivity(intent);
     }
 
+    /**
+     * Provides info about user profile
+     * @param id Current user id
+     * @param context App context
+     */
     private void getHairdresserInfo(Long id, Context context) {
         // url to post our data
         String url = Constants.getProfileURL();
@@ -157,6 +180,10 @@ public class HairdresserFragment extends Fragment implements PickiTCallbacks {
         queue.add(jsonObjectRequest);
     }
 
+    /**
+     * Changes mode of editable text
+     * @param text Selected EditText
+     */
     private void toggleText(EditText text){
         if (text.getKeyListener() != null){
             text.setTag(text.getKeyListener());
@@ -172,6 +199,17 @@ public class HairdresserFragment extends Fragment implements PickiTCallbacks {
     }
 
 
+    /**
+     * Procedure for picking image and passing it to sendImage()
+     * @param requestCode The integer request code originally supplied to
+     *                    startActivityForResult(), allowing you to identify who this
+     *                    result came from.
+     * @param resultCode The integer result code returned by the child activity
+     *                   through its setResult().
+     * @param data An Intent, which can return result data to the caller
+     *               (various data can be attached to Intent "extras").
+     *
+     */
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -198,6 +236,9 @@ public class HairdresserFragment extends Fragment implements PickiTCallbacks {
 
     }
 
+    /**
+     * Procedure sending request to server and pasing response
+     */
     public void sendImage() {
         RequestQueue queue = Volley.newRequestQueue(getContext());
         String url = "http://79.137.206.63:8011/hairdresser/upload";
@@ -253,6 +294,14 @@ public class HairdresserFragment extends Fragment implements PickiTCallbacks {
 
     }
 
+    /**
+     * An important procedure for selecting absolute path
+     * @param path
+     * @param wasDriveFile
+     * @param wasUnknownProvider
+     * @param wasSuccessful
+     * @param Reason
+     */
     @Override
     public void PickiTonCompleteListener(String path, boolean wasDriveFile, boolean wasUnknownProvider, boolean wasSuccessful, String Reason) {
         imagePath = path;
@@ -263,6 +312,9 @@ public class HairdresserFragment extends Fragment implements PickiTCallbacks {
 
     }
 
+    /**
+     * Checks persmissions for uploading an image, requires if needed
+     */
     public void checkPermission() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {

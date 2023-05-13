@@ -2,6 +2,9 @@ package com.example.tindercut.data.api;
 
 import com.google.gson.annotations.SerializedName;
 
+/**
+ * Supporting class for parsing registration info response
+ */
 public class RegistrationResponse {
     @SerializedName("response")
     String name;

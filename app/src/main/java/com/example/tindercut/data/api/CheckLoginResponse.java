@@ -5,6 +5,9 @@ import com.google.gson.annotations.SerializedName;
 
 import java.util.ArrayList;
 
+/**
+ * Supporting class for pasing check login response
+ */
 public class CheckLoginResponse {
     @SerializedName("name")
     String name;

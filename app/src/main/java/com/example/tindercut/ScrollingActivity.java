@@ -26,6 +26,10 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+/**
+ * Activity for scrollview of founded hairdressers
+ * Creates list of them
+ */
 public class ScrollingActivity extends AppCompatActivity {
 
     private final int PAGE_SIZE = 5;
@@ -33,6 +37,13 @@ public class ScrollingActivity extends AppCompatActivity {
     private ActivityScrollingBinding binding;
     private ImageView hairdresserIcon;
 
+    /**
+     *
+     * @param savedInstanceState If the activity is being re-initialized after
+     *     previously being shut down then this Bundle contains the data it most
+     *     recently supplied in {@link #onSaveInstanceState}.  <b><i>Note: Otherwise it is null.</i></b>
+     *
+     */
     @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,8 +66,9 @@ public class ScrollingActivity extends AppCompatActivity {
         HashMap<String, ArrayList<String>> extras = new HashMap<>();
         Log.v("DEV", "created");
 
-
-        //Заполняем из данных
+        /**
+         * Data parsing
+         */
         for (int i = 0; i < dataArrayList.size(); i++) {
 
             HairdresserDetailBody hairdresser = dataArrayList.get(i).getHairdresser();
