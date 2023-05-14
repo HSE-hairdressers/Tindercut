@@ -27,7 +27,7 @@
                 android:layout_centerInParent="false"
                 android:layout_marginLeft="10dp"
                 android:layout_toRightOf="@id/cardicon"
-                android:paddingTop="2dp"
+                android:paddingTop="5dp"
                 android:shadowColor="@color/peachpuff"
                 android:text="Hairdresser"
                 android:textColor="@color/red_peach"
@@ -42,7 +42,8 @@
                 android:id="@+id/cardicon"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="2dp"
+                android:layout_marginLeft="12dp"
+                android:paddingTop="5dp"
                 app:cardCornerRadius="90dp">
 
                 <ImageView
@@ -60,7 +61,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_below="@id/cardicon"
-                android:layout_marginTop="10dp">
+                android:layout_marginTop="16dp">
 
             </androidx.recyclerview.widget.RecyclerView>
 
