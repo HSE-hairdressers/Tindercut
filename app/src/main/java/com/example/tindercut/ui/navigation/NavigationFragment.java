@@ -10,6 +10,9 @@ import androidx.fragment.app.Fragment;
 import com.example.tindercut.R;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
+/**
+ * !!! Deprecated fragment, it is not in use.
+ */
 public class NavigationFragment extends Fragment implements View.OnClickListener {
 
     BottomNavigationView bottomNavigationView;

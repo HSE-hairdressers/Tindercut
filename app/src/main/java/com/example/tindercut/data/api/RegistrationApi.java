@@ -12,6 +12,9 @@ import retrofit2.http.Body;
 import retrofit2.http.Headers;
 import retrofit2.http.POST;
 
+/**
+ * Api for sending registration info request
+ */
 public interface RegistrationApi {
     String url = Constants.registerURL;
 

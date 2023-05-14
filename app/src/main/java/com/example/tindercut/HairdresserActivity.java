@@ -17,6 +17,9 @@ import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
+/**
+ * Activity for watching hairdresser profile without using fragment
+ */
 public class HairdresserActivity extends AppCompatActivity {
 
     String iconUrl;
@@ -28,6 +31,13 @@ public class HairdresserActivity extends AppCompatActivity {
     ImageView hairdresserIcon, hairdresserEdit;
     private BottomNavigationView bottomNavigationView;
 
+    /**
+     *
+     * @param savedInstanceState If the activity is being re-initialized after
+     *     previously being shut down then this Bundle contains the data it most
+     *     recently supplied in {@link #onSaveInstanceState}.  <b><i>Note: Otherwise it is null.</i></b>
+     *
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -65,16 +75,28 @@ public class HairdresserActivity extends AppCompatActivity {
         Log.v("DEV", "Activity created");
     }
 
+    /**
+     * Opens LoginActivity if needed
+     */
     private void openLoginActivity() {
         Intent intent = new Intent(this, LoginActivity.class);
         startActivity(intent);
         finish();
     }
+
+    /**
+     * Checks if user is logged in with Google
+     * @return Returns boolean if user is logged in
+     */
     private Boolean LoggedInWithGoogleAuth() {
         GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(this);
         return account != null;
     }
 
+    /**
+     * Changes mode of editable text
+     * @param text Selected EditText
+     */
     private void toggleText(EditText text){
         if (text.getKeyListener() != null){
             text.setTag(text.getKeyListener());

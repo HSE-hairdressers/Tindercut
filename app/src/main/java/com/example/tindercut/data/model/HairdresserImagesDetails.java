@@ -4,6 +4,9 @@ import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
 
+/**
+ * Supporting class for hairdresser profile pics pasing
+ */
 public class HairdresserImagesDetails implements Serializable {
     @SerializedName("img_path")
     String img_path;

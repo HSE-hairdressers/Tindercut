@@ -1,5 +1,8 @@
 package com.example.tindercut.data;
 
+/**
+ * Contains list of constants for app
+ */
 public class Constants {
     public final static String host = "http://79.137.206.63:8011";
 

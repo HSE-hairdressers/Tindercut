@@ -46,6 +46,9 @@ import retrofit2.Callback;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
+/**
+ * Fragment for sending a photo to server and passing data to ScrollingActivity
+ */
 public class SearchPhotoFragment extends Fragment implements PickiTCallbacks {
 
     private final int picked_image = 1;
@@ -57,6 +60,18 @@ public class SearchPhotoFragment extends Fragment implements PickiTCallbacks {
     private String imagePath;
     private View view;
 
+    /**
+     * Contains listeners for buttons on interface
+     * @param inflater The LayoutInflater object that can be used to inflate
+     * any views in the fragment,
+     * @param container If non-null, this is the parent view that the fragment's
+     * UI should be attached to.  The fragment should not add the view itself,
+     * but this can be used to generate the LayoutParams of the view.
+     * @param savedInstanceState If non-null, this fragment is being re-constructed
+     * from a previous saved state as given here.
+     *
+     * @return return View
+     */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -68,6 +83,10 @@ public class SearchPhotoFragment extends Fragment implements PickiTCallbacks {
         //Привязка обработчика события к кнопке
         button = view.findViewById(R.id.button);
         button.setOnClickListener(new View.OnClickListener() {
+            /**
+             * Listener for picking an image with PickIT library
+             * @param v The view that was clicked.
+             */
             @Override
             public void onClick(View v) {
                 Intent pickPhoto = new Intent(Intent.ACTION_PICK);
@@ -80,6 +99,10 @@ public class SearchPhotoFragment extends Fragment implements PickiTCallbacks {
 
         button2 = view.findViewById(R.id.button2);
         button2.setOnClickListener(new View.OnClickListener() {
+            /**
+             * Listener for sending an image to server
+             * @param v The view that was clicked.
+             */
             @Override
             public void onClick(View v) {
                 if (ImageBitmap != null) {
@@ -91,6 +114,17 @@ public class SearchPhotoFragment extends Fragment implements PickiTCallbacks {
         return view;
     }
 
+    /**
+     * Mainly used for getting an absolute path for image
+     * @param requestCode The integer request code originally supplied to
+     *                    startActivityForResult(), allowing you to identify who this
+     *                    result came from.
+     * @param resultCode The integer result code returned by the child activity
+     *                   through its setResult().
+     * @param data An Intent, which can return result data to the caller
+     *               (various data can be attached to Intent "extras").
+     *
+     */
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -127,6 +161,10 @@ public class SearchPhotoFragment extends Fragment implements PickiTCallbacks {
 
     }
 
+    /**
+     * Sending image on server
+     * Contains retrofit2 request
+     */
     public void sendImage() {
 
         Retrofit retrofit = new Retrofit.Builder()
@@ -144,6 +182,11 @@ public class SearchPhotoFragment extends Fragment implements PickiTCallbacks {
         Call<SearchImageResponse> call = retrofitApi.uploadImage(body);
 
         call.enqueue(new Callback<SearchImageResponse>() {
+            /**
+             * Parsing the response
+             * @param call request
+             * @param response response for request
+             */
             @Override
             public void onResponse(Call<SearchImageResponse> call, retrofit2.Response<SearchImageResponse> response) {
 
@@ -165,65 +208,21 @@ public class SearchPhotoFragment extends Fragment implements PickiTCallbacks {
 
             }
 
+            /**
+             * Request fail handler
+             * @param call request
+             * @param t error on response
+             */
             @Override
             public void onFailure(Call<SearchImageResponse> call, Throwable t) {
                 Toast.makeText(getContext(), t.toString(), Toast.LENGTH_SHORT).show();
             }
         });
-
-        /*RequestQueue queue = Volley.newRequestQueue(getContext());
-        String url = "http://79.137.206.63:8011/img";
-
-        SimpleMultiPartRequest uploadRequest = new SimpleMultiPartRequest(Request.Method.POST, url,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        try {
-                            JSONObject responseJSON = new JSONObject(response);
-                            JSONArray hairData = responseJSON.getJSONArray("data");
-
-                            //Выполняем проверку успеха отправки изображения
-                            String requestResult = responseJSON.getString("result");
-                            if (requestResult.equals("Ok")) {
-                                Toast.makeText(getContext(), "Изображение успешно загружено.", Toast.LENGTH_SHORT).show();
-
-                                Intent scrollingIntent = new Intent(getContext(), ScrollingActivity.class);
-                                ArrayList<DataSerializable> arrayToSend = new ArrayList<>();
-                                for (int i = 0; i < hairData.length(); i++) {
-                                    arrayToSend.add(new DataSerializable(hairData.get(i).toString()));
-                                }
-
-                                Bundle bundle = new Bundle();
-                                bundle.putSerializable("dataArray", arrayToSend);
-                                scrollingIntent.putExtras(bundle);
-                                try {
-                                    startActivity(scrollingIntent);
-                                } catch (Exception e) {
-                                    e.getStackTrace();
-                                }
-
-                            } else {
-                                Toast.makeText(getContext(), requestResult, Toast.LENGTH_SHORT).show();
-                            }
-
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-
-                        }
-                    }
-                }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Toast.makeText(getContext(), error.getLocalizedMessage(), Toast.LENGTH_LONG).show();
-            }
-        });*/
-
-        String fileName = Calendar.getInstance().getTime() + " Photo";
-        //System.out.println("Путь: "+ imageUri.getPath());
-        Log.v("DEV", imagePath);
-        //uploadRequest.addMultipartParam("body", "text/plain", base64Image);
     }
 
+    /**
+     * Checks persmissions for uploading an image, requires if needed
+     */
     public void checkPermission() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
@@ -267,7 +266,14 @@ public class SearchPhotoFragment extends Fragment implements PickiTCallbacks {
 
     }
 
-
+    /**
+     * An important procedure for selecting absolute path
+     * @param path
+     * @param wasDriveFile
+     * @param wasUnknownProvider
+     * @param wasSuccessful
+     * @param Reason
+     */
     @Override
     public void PickiTonCompleteListener(String path, boolean wasDriveFile, boolean wasUnknownProvider, boolean wasSuccessful, String Reason) {
 

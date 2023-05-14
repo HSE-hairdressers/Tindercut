@@ -18,6 +18,10 @@ import com.bumptech.glide.Glide;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+/**
+ * Adapter for nested recyclerviews inside scrolling activivty
+ * The higher level of nesting
+ */
 public class DataAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private final int VIEW_TYPE_ITEM = 0;
     private final int VIEW_TYPE_LOADING = 1;
@@ -29,7 +33,13 @@ public class DataAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private final Context context;
     private final HashMap<String, ArrayList<String>> extras;
 
-
+    /**
+     * Конструктор
+     * @param context App context
+     * @param images ArrayList of ArrayLists with hairdressers uploaded pics
+     * @param hairdressers ArrayList of hairdressers
+     * @param extras Hashmap of profile icons
+     */
     public DataAdapter(Context context, ArrayList<ArrayList<String>> images, ArrayList<String> hairdressers, HashMap<String, ArrayList<String>> extras) {
         this.context = context;
         this.inflater = LayoutInflater.from(context);
@@ -38,7 +48,14 @@ public class DataAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         this.extras = extras;
     }
 
-
+    /**
+     * Сreates a new ViewHolder and initializes some private fields to be used by RecyclerView
+     * @param parent The ViewGroup into which the new View will be added after it is bound to
+     *               an adapter position.
+     * @param viewType The view type of the new View.
+     *
+     * @return Returns view
+     */
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -51,6 +68,13 @@ public class DataAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         }
     }
 
+    /**
+     * Updates the ViewHolder contents with the item at the given position and also sets up some
+     * private fields to be used by RecyclerView.
+     * @param holder The ViewHolder which should be updated to represent the contents of the
+     *        item at the given position in the data set.
+     * @param position The position of the item within the adapter's data set.
+     */
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         if (holder instanceof ItemViewHolder) {
@@ -69,11 +93,20 @@ public class DataAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     }
 
+    /**
+     * Returns type of required position
+     * @param position position to query
+     * @return type of position
+     */
     @Override
     public int getItemViewType(int position) {
         return Images.get(position) == null ? VIEW_TYPE_LOADING : VIEW_TYPE_ITEM;
     }
 
+    /**
+     * Counts items
+     * @return number of items
+     */
     @Override
     public int getItemCount() {
 
@@ -86,17 +119,29 @@ public class DataAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         holder.recyclerView.setAdapter(adapter);
     }
 
+    /**
+     * Empty func for actions with loading animation
+     * @param viewHolder
+     * @param position
+     */
     private void showLoadingView(LoadingViewHolder viewHolder, int position) {
         //ProgressBar would be displayed
 
     }
 
+    /**
+     * Describes an item view and metadata about its place within the RecyclerView
+     */
     private class ItemViewHolder extends RecyclerView.ViewHolder {
 
         ImageView hairdresserIcon;
         RecyclerView recyclerView;
         TextView textView;
 
+        /**
+         * Implements listener for opening hairdresser profile
+         * @param view required View
+         */
         public ItemViewHolder(View view) {
             super(view);
             textView = view.findViewById(R.id.textLoaded);
@@ -116,6 +161,9 @@ public class DataAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         }
     }
 
+    /**
+     * Describes an loading item view and metadata about its place within the RecyclerView
+     */
     private class LoadingViewHolder extends RecyclerView.ViewHolder {
 
         ProgressBar progressBar;
@@ -126,6 +174,9 @@ public class DataAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         }
     }
 
+    /**
+     * Implements nesting of recyclerviews
+     */
     public class HorizontalViewHolder extends RecyclerView.ViewHolder {
 
         RecyclerView recyclerView;
