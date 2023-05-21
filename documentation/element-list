@@ -1,0 +1,13 @@
+com.example.tindercut
+com.example.tindercut.data
+com.example.tindercut.data.api
+com.example.tindercut.data.model
+com.example.tindercut.ui.editprofile
+com.example.tindercut.ui.hairdresser
+com.example.tindercut.ui.home
+com.example.tindercut.ui.login
+com.example.tindercut.ui.navigation
+com.example.tindercut.ui.photosearch
+com.example.tindercut.ui.register
+com.example.tindercut.ui.settings
+com.example.tindercut.utils
