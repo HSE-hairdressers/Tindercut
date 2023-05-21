@@ -1,7 +1,6 @@
 package com.example.tindercut.ui.hairdresser;
 
 import android.Manifest;
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -30,12 +29,10 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.error.VolleyError;
-import com.android.volley.request.JsonObjectRequest;
 import com.android.volley.request.SimpleMultiPartRequest;
 import com.android.volley.toolbox.Volley;
 import com.bumptech.glide.Glide;
 import com.example.tindercut.R;
-import com.example.tindercut.data.Constants;
 import com.example.tindercut.data.User;
 import com.example.tindercut.ui.settings.SettingsActivity;
 import com.hbisoft.pickit.PickiT;
@@ -95,6 +92,7 @@ public class HairdresserFragment extends Fragment implements PickiTCallbacks {
 
         Log.v("DEV", User.getName(getContext()));
         hairdresserName.setText(User.getName(getContext()));
+        hairdresserIcon.setImageResource(R.drawable.ic_profile);
 
         Bundle extras = getActivity().getIntent().getExtras();
         if (extras != null){
@@ -109,7 +107,7 @@ public class HairdresserFragment extends Fragment implements PickiTCallbacks {
             hairdresserName.setKeyListener(null);
 
             hairdresserDescription.setText("Some description here...");
-            Glide.with(this).load(iconUrl).into(hairdresserIcon);
+            Glide.with(this).load(iconUrl).placeholder(R.drawable.ic_profile).into(hairdresserIcon);
         }
 
         hairdresserEdit.setOnClickListener(new View.OnClickListener() {
@@ -141,43 +139,6 @@ public class HairdresserFragment extends Fragment implements PickiTCallbacks {
     private void openSettingsActivity() {
         Intent intent = new Intent(getContext(), SettingsActivity.class);
         startActivity(intent);
-    }
-
-    /**
-     * Provides info about user profile
-     * @param id Current user id
-     * @param context App context
-     */
-    private void getHairdresserInfo(Long id, Context context) {
-        // url to post our data
-        String url = Constants.getProfileURL();
-        // creating a new variable for our request queue
-        RequestQueue queue = Volley.newRequestQueue(context);
-        JSONObject object = new JSONObject();
-        try {
-            //input your API parameters
-            object.put("id", id);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, url, object,
-                new Response.Listener<JSONObject>() {
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        try {
-                            iconUrl = response.getString("pic");
-                            Glide.with(getActivity()).load(iconUrl).into(hairdresserIcon);
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Toast.makeText(context, "Fail to get response = " + error, Toast.LENGTH_SHORT).show();
-            }
-        });
-        queue.add(jsonObjectRequest);
     }
 
     /**

@@ -20,7 +20,10 @@ public class Constants {
         return host + "/auth/registration";
     }
 
-    public static String getProfileURL() {
-        return host + "/hairdresser/info";
+    public static String getProfileInfoURL(Long id) {
+        return host + "/hairdresser/info/" + id.toString();
+    }
+    public static String getProfileEditURL(Long id) {
+        return host + "/hairdresser/edit/" + id.toString();
     }
 }
