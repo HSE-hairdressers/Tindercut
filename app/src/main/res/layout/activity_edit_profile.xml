@@ -92,12 +92,12 @@
         android:layout_marginBottom="6dp"
         android:enabled="true"
         android:text="@string/action_submit"
-        android:textColor="?android:attr/textColorPrimaryNoDisable"
+        android:textColor="@android:color/white"
         android:textStyle="bold"
         app:cornerRadius="45dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.452"
+        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent" />
 
     <ProgressBar

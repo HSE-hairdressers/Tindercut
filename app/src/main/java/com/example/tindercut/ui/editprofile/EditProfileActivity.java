@@ -10,7 +10,6 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -22,7 +21,6 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
-import com.android.volley.Response;
 import com.android.volley.error.VolleyError;
 import com.android.volley.request.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
@@ -31,17 +29,33 @@ import com.example.tindercut.MainActivity;
 import com.example.tindercut.R;
 import com.example.tindercut.data.Constants;
 import com.example.tindercut.data.User;
+import com.example.tindercut.data.api.GetProfileInfoApi;
+import com.example.tindercut.data.api.RegistrationApi;
+import com.example.tindercut.data.api.RegistrationResponse;
+import com.example.tindercut.data.api.SubmitProfileApi;
+import com.example.tindercut.data.api.UploadImageParamApi;
+import com.example.tindercut.data.model.GetProfileInfoResponse;
 import com.example.tindercut.utils.PermissionChecker;
 import com.hbisoft.pickit.PickiT;
 import com.hbisoft.pickit.PickiTCallbacks;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
+
+import okhttp3.OkHttpClient;
+import okhttp3.ResponseBody;
+import okhttp3.logging.HttpLoggingInterceptor;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
+import retrofit2.converter.scalars.ScalarsConverterFactory;
 
 public class EditProfileActivity extends AppCompatActivity implements PickiTCallbacks {
     PickiT pickIt;
@@ -125,46 +139,43 @@ public class EditProfileActivity extends AppCompatActivity implements PickiTCall
     }
 
     private void getHairdresserInfo(Context context, Long id) {
-        // url to post our data
-        String url = Constants.getProfileInfoURL(id);
-        // creating a new variable for our request queue
-        RequestQueue queue = Volley.newRequestQueue(context);
-        JSONObject object = new JSONObject();
-        try {
-            //input your API parameters
-            object.put("id", id);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, url, object,
-                new Response.Listener<JSONObject>() {
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        try {
-                            Log.v("POOP", response.toString());
-                            String iconUrl = response.getString("pic");
-                            Glide.with(EditProfileActivity.this).load(iconUrl).placeholder(R.drawable.ic_profile).into(icon);
-                            name = response.getString("name");
-                            nameEditText.setText(name);
-                            company = response.getString("company");
-                            companyEditText.setText(company);
-                            address = response.getString("addr");
-                            addressEditText.setText(address);
-                            phone = response.getString("num");
-                            phoneEditText.setText(phone);
 
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                            getHairdresserInfo(context, id);
-                        }
-                    }
-                }, new Response.ErrorListener() {
+        String userId = Long.toString(id);
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(Constants.host)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        GetProfileInfoApi retrofitApi = retrofit.create(GetProfileInfoApi.class);
+        Call<GetProfileInfoResponse> call = retrofitApi.getProfileInfo(userId);
+
+        call.enqueue(new Callback<GetProfileInfoResponse>() {
             @Override
-            public void onErrorResponse(VolleyError error) {
-                Toast.makeText(context, "Fail to get response = " + error, Toast.LENGTH_SHORT).show();
+            public void onResponse(Call<GetProfileInfoResponse> call, retrofit2.Response<GetProfileInfoResponse> response) {
+                if (response.isSuccessful()){
+                    String iconUrl = response.body().getPic();
+                    Glide.with(EditProfileActivity.this).load(iconUrl).placeholder(R.drawable.ic_profile).into(icon);
+                    name = response.body().getName();
+                    nameEditText.setText(name);
+                    company = response.body().getCompany();
+                    companyEditText.setText(company);
+                    address = response.body().getAddress();
+                    addressEditText.setText(address);
+                    phone = response.body().getPhone();
+                    phoneEditText.setText(phone);
+                }
+                else {
+                    Toast.makeText(getApplicationContext(), "Произошла ошибка!", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<GetProfileInfoResponse> call, Throwable t) {
+                t.printStackTrace();
+                getHairdresserInfo(context, id);
             }
         });
-        queue.add(jsonObjectRequest);
     }
 
     private void openMainActivity() {
@@ -183,26 +194,33 @@ public class EditProfileActivity extends AppCompatActivity implements PickiTCall
     }
 
     private void submitChanges(HashMap<String, String> info, Context context) {
-        // url to post our data
-        String url = Constants.getProfileEditURL(User.getID(getApplicationContext()));
-        // creating a new variable for our request queue
-        RequestQueue queue = Volley.newRequestQueue(context);
+
+        String userId = Long.toString(User.getID(getApplicationContext()));
         JSONObject object = new JSONObject(info);
 
-        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.PATCH, url, object, new Response.Listener<JSONObject>() {
+        //  **new** request using retrofit
+        Retrofit retfrofit = new Retrofit.Builder()
+                .baseUrl(Constants.host)
+                .addConverterFactory(ScalarsConverterFactory.create())
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        SubmitProfileApi registrationApi = retfrofit.create(SubmitProfileApi.class);
+        Call<ResponseBody> call = registrationApi.sendInfo(userId,object.toString());
+
+        call.enqueue(new Callback<ResponseBody>() {
             @Override
-            public void onResponse(JSONObject response) {
-//                updateUiWithUser();
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                updateUiWithUser();
                 setResult(Activity.RESULT_OK);
                 finish();
             }
-        }, new Response.ErrorListener() {
+
             @Override
-            public void onErrorResponse(VolleyError error) {
-                Toast.makeText(context, "Fail to get response = " + error, Toast.LENGTH_SHORT).show();
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                Toast.makeText(context, "Fail to get response = " + t.toString(), Toast.LENGTH_SHORT).show();
             }
         });
-        queue.add(jsonObjectRequest);
     }
 
     @Override
