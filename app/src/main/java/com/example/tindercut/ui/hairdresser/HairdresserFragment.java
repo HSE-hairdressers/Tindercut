@@ -33,7 +33,13 @@ import com.android.volley.request.SimpleMultiPartRequest;
 import com.android.volley.toolbox.Volley;
 import com.bumptech.glide.Glide;
 import com.example.tindercut.R;
+import com.example.tindercut.ScrollingActivity;
+import com.example.tindercut.data.Constants;
 import com.example.tindercut.data.User;
+import com.example.tindercut.data.api.UploadImageApi;
+import com.example.tindercut.data.api.UploadImageParamApi;
+import com.example.tindercut.data.model.SearchImageData;
+import com.example.tindercut.data.model.SearchImageResponse;
 import com.example.tindercut.ui.settings.SettingsActivity;
 import com.hbisoft.pickit.PickiT;
 import com.hbisoft.pickit.PickiTCallbacks;
@@ -41,8 +47,21 @@ import com.hbisoft.pickit.PickiTCallbacks;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.ArrayList;
+
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.OkHttpClient;
+import okhttp3.RequestBody;
+import okhttp3.ResponseBody;
+import okhttp3.logging.HttpLoggingInterceptor;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 /**
  * Fragment for viewing user profile
@@ -198,46 +217,60 @@ public class HairdresserFragment extends Fragment implements PickiTCallbacks {
     }
 
     /**
-     * Procedure sending request to server and pasing response
+     * Sending image on server
+     * Contains retrofit2 request
      */
     public void sendImage() {
-        RequestQueue queue = Volley.newRequestQueue(getContext());
-        String url = "http://79.137.206.63:8011/hairdresser/upload";
+        HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
+        interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
+        OkHttpClient client = new OkHttpClient.Builder().addInterceptor(interceptor).build();
 
-        SimpleMultiPartRequest uploadRequest = new SimpleMultiPartRequest(Request.Method.POST, url,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        try {
-                            JSONObject responseJSON = new JSONObject(response);
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(Constants.host)
+                .client(client)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
 
-                            //Выполняем проверку успеха отправки изображения
-                            String requestResult = responseJSON.getString("result");
-                            if (requestResult.equals("Ok")) {
-                                Toast.makeText(getContext(), "Изображение успешно загружено.", Toast.LENGTH_SHORT).show();
-                            } else {
-                                Toast.makeText(getContext(), requestResult, Toast.LENGTH_SHORT).show();
-                            }
+        UploadImageParamApi retrofitApi = retrofit.create(UploadImageParamApi.class);
 
-                        } catch (JSONException e) {
-                            e.printStackTrace();
+        File selected_image = new File(imagePath);
+        RequestBody requestFile = RequestBody.create(MediaType.parse("image/*"), selected_image);
+        MultipartBody.Part imageBody =
+                MultipartBody.Part.createFormData("image", selected_image.getName(), requestFile);
+        RequestBody idBody = RequestBody.create(MediaType.parse("text/plain"), User.getID(getContext()).toString());
 
-                        }
-                    }
-                }, new Response.ErrorListener() {
+        Call<ResponseBody> call = retrofitApi.uploadImage(imageBody, idBody);
+
+        call.enqueue(new Callback<ResponseBody>() {
+            /**
+             * Parsing the response
+             * @param call request
+             * @param response response for request
+             */
             @Override
-            public void onErrorResponse(VolleyError error) {
-                Toast.makeText(getContext(), error.getLocalizedMessage(), Toast.LENGTH_LONG).show();
+            public void onResponse(Call<ResponseBody> call, retrofit2.Response<ResponseBody> response) {
+
+                if (response.isSuccessful()){
+                    Toast.makeText(getContext(), "Изображение успешно загружено!", Toast.LENGTH_SHORT).show();
+
+                }
+                else {
+                    Toast.makeText(getContext(), "Произошла ошибка!", Toast.LENGTH_SHORT).show();
+                }
+
+            }
+
+            /**
+             * Request fail handler
+             * @param call request
+             * @param t error on response
+             */
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                Toast.makeText(getContext(), t.toString(), Toast.LENGTH_SHORT).show();
+                Log.v("DEV", t.toString());
             }
         });
-        String fileName = "photo";
-
-        Log.v("REQ", User.getID(getContext()).toString());
-        uploadRequest.addStringParam("id", User.getID(getContext()).toString());
-        uploadRequest.addFile(fileName, imagePath);
-        //uploadRequest.addMultipartParam("body", "text/plain", base64Image);
-
-        queue.add(uploadRequest);
     }
 
     @Override

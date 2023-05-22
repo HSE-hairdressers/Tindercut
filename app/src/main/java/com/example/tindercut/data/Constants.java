@@ -12,6 +12,8 @@ public class Constants {
 
     public final static String imgUrl = "/img";
 
+    public final static String uploadUrl = "hairdresser/upload";
+
     public static String getLoginURL() {
         return host + loginURL;
     }
