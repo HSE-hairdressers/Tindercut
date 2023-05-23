@@ -2,7 +2,6 @@ package com.example.tindercut.adapters;
 
 import android.content.Context;
 import android.content.Intent;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -33,21 +32,26 @@ public class DataAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private final ArrayList<ArrayList<String>> Images;
     private final ArrayList<String> hairdressers;
 
+    private final ArrayList<String> userId;
+
     private final Context context;
     private final HashMap<String, ArrayList<String>> extras;
 
     /**
      * Конструктор
-     * @param context App context
-     * @param images ArrayList of ArrayLists with hairdressers uploaded pics
+     *
+     * @param context      App context
+     * @param images       ArrayList of ArrayLists with hairdressers uploaded pics
      * @param hairdressers ArrayList of hairdressers
-     * @param extras Hashmap of profile icons
+     * @param userId
+     * @param extras       Hashmap of profile icons
      */
-    public DataAdapter(Context context, ArrayList<ArrayList<String>> images, ArrayList<String> hairdressers, HashMap<String, ArrayList<String>> extras) {
+    public DataAdapter(Context context, ArrayList<ArrayList<String>> images, ArrayList<String> hairdressers, ArrayList<String> userId, HashMap<String, ArrayList<String>> extras) {
         this.context = context;
         this.inflater = LayoutInflater.from(context);
         this.Images = images;
         this.hairdressers = hairdressers;
+        this.userId = userId;
         this.extras = extras;
     }
 
@@ -156,7 +160,7 @@ public class DataAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 public void onClick(View v) {
                     Intent hairdresserProfile = new Intent(context, HairdresserActivity.class);
                     hairdresserProfile.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    hairdresserProfile.putExtra("images", Images.get(getAdapterPosition()));
+                    hairdresserProfile.putExtra("id", userId.get(getAdapterPosition()));
                     hairdresserProfile.putExtra("name", hairdressers.get(getAdapterPosition()));
                     hairdresserProfile.putExtra("icon", extras.get(hairdressers.get(getAdapterPosition())).get(0));
                     context.startActivity(hairdresserProfile);

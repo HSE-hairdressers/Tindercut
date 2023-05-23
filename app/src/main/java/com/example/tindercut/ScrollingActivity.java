@@ -58,6 +58,7 @@ public class ScrollingActivity extends AppCompatActivity {
         ArrayList<SearchImageData> dataArrayList = (ArrayList<SearchImageData>) getIntent().getSerializableExtra("dataArray");
         ArrayList<ArrayList<String>> imageUrlsArray = new ArrayList<>();
         ArrayList<String> hairdressers = new ArrayList<>();
+        ArrayList<String> userId = new ArrayList<>();
         HashMap<String, ArrayList<String>> extras = new HashMap<>();
         Log.v("DEV", "created");
 
@@ -70,8 +71,10 @@ public class ScrollingActivity extends AppCompatActivity {
             ArrayList<HairdresserImagesDetails> hairImages = dataArrayList.get(i).getImages();
             String name = hairdresser.getName();
             String hairdresserIcon = hairdresser.getPic();
+            String id = hairdresser.getId();
 
             hairdressers.add(name);
+            userId.add(id);
 
             ArrayList<String> extrasArr = new ArrayList<>();
             extrasArr.add(hairdresserIcon); // 1 параметр - Икнока
@@ -95,7 +98,7 @@ public class ScrollingActivity extends AppCompatActivity {
 
         //Получаем scrollView страницы
         RecyclerView recyclerView = (RecyclerView)findViewById(R.id.recyclerview);
-        DataAdapter adapter = new DataAdapter(getApplicationContext(), imageUrlsArray, hairdressers, extras);
+        DataAdapter adapter = new DataAdapter(getApplicationContext(), imageUrlsArray, hairdressers, userId, extras);
         recyclerView.setAdapter(adapter);
         adapter.notifyDataSetChanged();
 

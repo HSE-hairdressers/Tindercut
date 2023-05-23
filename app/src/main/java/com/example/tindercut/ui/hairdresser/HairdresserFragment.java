@@ -24,22 +24,27 @@ import android.widget.Toast;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
-import com.android.volley.Response;
 import com.android.volley.error.VolleyError;
 import com.android.volley.request.SimpleMultiPartRequest;
 import com.android.volley.toolbox.Volley;
 import com.bumptech.glide.Glide;
 import com.example.tindercut.R;
 import com.example.tindercut.ScrollingActivity;
+import com.example.tindercut.adapters.GalleryAdapter;
 import com.example.tindercut.data.Constants;
 import com.example.tindercut.data.User;
+import com.example.tindercut.data.api.GetUserImagesApi;
 import com.example.tindercut.data.api.UploadImageApi;
 import com.example.tindercut.data.api.UploadImageParamApi;
 import com.example.tindercut.data.model.SearchImageData;
 import com.example.tindercut.data.model.SearchImageResponse;
+import com.example.tindercut.data.model.UserImageDetails;
+import com.example.tindercut.data.model.UserImagesResponse;
 import com.example.tindercut.ui.settings.SettingsActivity;
 import com.hbisoft.pickit.PickiT;
 import com.hbisoft.pickit.PickiTCallbacks;
@@ -60,6 +65,7 @@ import okhttp3.ResponseBody;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Call;
 import retrofit2.Callback;
+import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
@@ -112,6 +118,49 @@ public class HairdresserFragment extends Fragment implements PickiTCallbacks {
         hairdresserName.setText(User.getName(getContext()));
         hairdresserIcon.setImageResource(R.drawable.ic_profile);
 
+        String userId = User.getID(getContext()).toString();
+        Log.v("DEV", userId);
+        HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
+        interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
+        OkHttpClient client = new OkHttpClient.Builder().addInterceptor(interceptor).build();
+        ArrayList<String> images = new ArrayList<>();
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(Constants.host)
+                .client(client)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        GetUserImagesApi retrofitApi = retrofit.create(GetUserImagesApi.class);
+        Call<UserImagesResponse> call = retrofitApi.getProfileImages(userId);
+
+        call.enqueue(new Callback<UserImagesResponse>() {
+            @Override
+            public void onResponse(Call<UserImagesResponse> call, Response<UserImagesResponse> response) {
+                if (response.isSuccessful()){
+                    ArrayList<UserImageDetails> imagesObject = response.body().getImages();
+                    for (int i = 0; i < imagesObject.size(); ++i){
+                        Log.v("DEV", imagesObject.get(i).getImg());
+                        images.add(imagesObject.get(i).getImg());
+                    }
+                    RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.imagesProfileGallery);
+                    GalleryAdapter adapter = new GalleryAdapter(getContext(), images);
+
+                    LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
+                    recyclerView.setLayoutManager(linearLayoutManager);
+                    recyclerView.setAdapter(adapter);
+                }
+                else {
+                    Toast.makeText(getContext(), "Fail to get response", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<UserImagesResponse> call, Throwable t) {
+                Toast.makeText(getContext(), "Fail to get response = " + t.toString(), Toast.LENGTH_SHORT).show();
+            }
+        });
+
         Bundle extras = getActivity().getIntent().getExtras();
         if (extras != null){
             name = extras.getString("name");
@@ -124,7 +173,6 @@ public class HairdresserFragment extends Fragment implements PickiTCallbacks {
             hairdresserName.setTag(hairdresserName.getKeyListener());
             hairdresserName.setKeyListener(null);
 
-            hairdresserDescription.setText("Some description here...");
             Glide.with(this).load(iconUrl).placeholder(R.drawable.ic_profile).into(hairdresserIcon);
         }
 
