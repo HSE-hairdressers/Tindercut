@@ -1,7 +1,8 @@
-package com.example.tindercut;
+package com.example.tindercut.adapters;
 
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +15,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.example.tindercut.HairdresserActivity;
+import com.example.tindercut.R;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -153,6 +156,7 @@ public class DataAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 public void onClick(View v) {
                     Intent hairdresserProfile = new Intent(context, HairdresserActivity.class);
                     hairdresserProfile.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    hairdresserProfile.putExtra("images", Images.get(getAdapterPosition()));
                     hairdresserProfile.putExtra("name", hairdressers.get(getAdapterPosition()));
                     hairdresserProfile.putExtra("icon", extras.get(hairdressers.get(getAdapterPosition())).get(0));
                     context.startActivity(hairdresserProfile);
