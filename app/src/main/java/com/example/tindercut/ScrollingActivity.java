@@ -1,6 +1,5 @@
 package com.example.tindercut;
 
-import android.graphics.Bitmap;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
@@ -12,16 +11,12 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.tindercut.adapters.DataAdapter;
 import com.example.tindercut.data.model.HairdresserDetailBody;
 import com.example.tindercut.data.model.HairdresserImagesDetails;
 import com.example.tindercut.data.model.SearchImageData;
-import com.example.tindercut.data.model.SearchImageResponse;
 import com.example.tindercut.databinding.ActivityScrollingBinding;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;

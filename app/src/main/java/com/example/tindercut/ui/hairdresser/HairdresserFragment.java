@@ -104,7 +104,6 @@ public class HairdresserFragment extends Fragment implements PickiTCallbacks {
         pickIt = new PickiT(getContext(), this, getActivity());
 
         hairdresserName = (EditText) view.findViewById(R.id.hairdresserName);
-        hairdresserDescription = view.findViewById(R.id.hairdresserDescription);
         hairdresserIcon = view.findViewById(R.id.hairdresserPhoto);
         hairdresserEdit = view.findViewById(R.id.settings);
         buttonUploadPhoto = view.findViewById(R.id.buttonUploadPhoto);
