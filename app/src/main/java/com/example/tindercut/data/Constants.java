@@ -16,6 +16,8 @@ public class Constants {
 
     public final static String profileInfoUrl = "/hairdresser/info/{id}";
 
+    public final static String profileImgUrl = "/hairdresser/images/{id}";
+
     public final static String profileEditUrl = "/hairdresser/edit/{id}";
 
     public static String getLoginURL() {

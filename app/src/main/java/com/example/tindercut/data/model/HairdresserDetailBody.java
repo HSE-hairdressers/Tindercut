@@ -20,14 +20,18 @@ public class HairdresserDetailBody implements Serializable {
     @SerializedName("pic")
     private String pic;
 
+    @SerializedName("id")
+    private String id;
 
-    public HairdresserDetailBody(String name, String num, String addr, String company) {
+
+    public HairdresserDetailBody(String name, String num, String addr, String company, String id) {
         super();
         this.name = name;
         this.num = num;
         this.addr = addr;
         this.company = company;
         this.pic = pic;
+        this.id = id;
     }
 
     public String getPic() {
@@ -68,5 +72,13 @@ public class HairdresserDetailBody implements Serializable {
 
     public void setCompany(String company) {
         this.company = company;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 }
